@@ -95,5 +95,34 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             // Assert
             result.Should().NotBeEmpty();
         }
+
+        [Fact]
+        public async Task DeletePostAsync_WhenPostExists_ReturnsTrue()
+        {
+            // Arrange
+            var post = _fixture.Create<Post>();
+            _postRepositoryMock.Setup(repo => repo.GetPostAsync(post.Id)).ReturnsAsync(post);
+            _postRepositoryMock.Setup(repo => repo.DeletePostAsync(post.Id)).ReturnsAsync(true);
+
+            // Act
+            var result = await _postService.DeletePostAsync(post.Id);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task DeletePostAsync_WhenPostDoesNotExist_ReturnsFalse()
+        {
+            // Arrange
+            var postId = _fixture.Create<int>();
+            _postRepositoryMock.Setup(repo => repo.GetPostAsync(postId)).ReturnsAsync((Post?)null);
+
+            // Act
+            var result = await _postService.DeletePostAsync(postId);
+
+            // Assert
+            result.Should().BeFalse();
+        }
     }
 }

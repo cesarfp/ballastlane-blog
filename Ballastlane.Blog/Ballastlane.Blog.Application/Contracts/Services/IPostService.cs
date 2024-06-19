@@ -9,8 +9,9 @@ namespace Ballastlane.Blog.Application.Contracts.Services
 {
     public interface IPostService
     {
-        public Task<Post?> GetPostAsync(int id);
-        public Task<IList<Post>> GetPostsAsync();
-        public Task<Post> CreatePostAsync(Post post);
+        Task<Post?> GetPostAsync(int id);
+        Task<IList<Post>> GetPostsAsync();
+        Task<Post> CreatePostAsync(Post post);
+        Task<bool> DeletePostAsync(int id);
     }
 }

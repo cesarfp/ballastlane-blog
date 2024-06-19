@@ -9,8 +9,9 @@ namespace Ballastlane.Blog.Application.Contracts.Persistence
 {
     public interface IPostRepository
     {
-        public Task<Post?> GetPostAsync(int Id);
-        public Task<IList<Post>> GetPostsAsync();
-        public Task<Post> CreatePostAsync(Post post);
+        Task<Post?> GetPostAsync(int Id);
+        Task<IList<Post>> GetPostsAsync();
+        Task<Post> CreatePostAsync(Post post);
+        Task<bool> DeletePostAsync(int id);
     }
 }

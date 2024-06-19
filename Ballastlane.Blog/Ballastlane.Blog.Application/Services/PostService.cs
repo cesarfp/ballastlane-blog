@@ -38,11 +38,18 @@ namespace Ballastlane.Blog.Application.Services
             throw new NotImplementedException();
         }
 
-        public void DeletePostAsync()
+        public async Task<bool> DeletePostAsync(int id)
         {
-            throw new NotImplementedException();
+            var postToDelete = await _postRepository.GetPostAsync(id);
+
+            if (postToDelete == null)
+            {
+                return false;
+            }
+
+            return await _postRepository.DeletePostAsync(id);
         }
 
-        
+
     }
 }

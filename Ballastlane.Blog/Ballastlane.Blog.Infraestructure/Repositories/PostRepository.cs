@@ -102,5 +102,21 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             return post;
         }
 
+        public async Task<bool> DeletePostAsync(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new SqlCommand("DELETE FROM Post WHERE Id = @Id", connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    var result = await command.ExecuteNonQueryAsync();
+                    return result > 0;
+                }
+            }
+        }
+
     }
 }

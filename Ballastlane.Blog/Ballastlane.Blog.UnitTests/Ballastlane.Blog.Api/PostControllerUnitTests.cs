@@ -117,5 +117,33 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
             Assert.Equal(request.Title, response.Title);
             Assert.Equal(request.Content, response.Content);
         }
+
+        [Fact]
+        public async Task DeletePostAsync_PostExists_ReturnsNoContent()
+        {
+            // Arrange
+            var postId = 1;
+            _postServiceMock.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(true);
+
+            // Act
+            var result = await _controller.DeletePostAsync(postId);
+
+            // Assert
+            result.Should().BeOfType<NoContentResult>();
+        }
+
+        [Fact]
+        public async Task DeletePostAsync_PostDoesNotExist_ReturnsNotFound()
+        {
+            // Arrange
+            var postId = 1;
+            _postServiceMock.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(false);
+
+            // Act
+            var result = await _controller.DeletePostAsync(postId);
+
+            // Assert
+            result.Should().BeOfType<NotFoundResult>();
+        }
     }
 }
