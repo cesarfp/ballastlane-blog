@@ -13,11 +13,6 @@ namespace Ballastlane.Blog.Infraestructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, string connectionString)
         {
-            //services.AddTransient<IPostRepository, PostRepository>();
-
-            //string connectionString = "Server=localhost; Database=BallastlaneBlog; User Id=sa; Password=Strong#Password;";
-
-
             services.AddTransient<IPostRepository, PostRepository>(provider =>
                 new PostRepository(connectionString));
 

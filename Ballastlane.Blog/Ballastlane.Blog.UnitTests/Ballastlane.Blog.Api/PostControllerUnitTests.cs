@@ -6,23 +6,18 @@ using Ballastlane.Blog.Domain.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
 {
     public class PostControllerUnitTests
     {
-        private readonly Mock<IPostService> _postServiceMock = new Mock<IPostService>();
+        private readonly Mock<IPostService> _mockPostService = new Mock<IPostService>();
         private readonly PostController _controller;
         private readonly Fixture _fixture = new Fixture();
 
         public PostControllerUnitTests()
         {
-            _controller = new PostController(_postServiceMock.Object);
+            _controller = new PostController(_mockPostService.Object);
         }
 
         [Fact]
@@ -31,7 +26,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
             // Arrange
             var expectedPost = _fixture.Create<Post>();
 
-            _postServiceMock.Setup(service => service.GetPostAsync(expectedPost.Id)).ReturnsAsync(expectedPost);
+            _mockPostService.Setup(service => service.GetPostAsync(expectedPost.Id)).ReturnsAsync(expectedPost);
 
             // Act
             var result = await _controller.GetPostAsync(expectedPost.Id);
@@ -48,7 +43,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var postId = _fixture.Create<int>();
-            _postServiceMock.Setup(service => service.GetPostAsync(postId)).ReturnsAsync((Post?)null);
+            _mockPostService.Setup(service => service.GetPostAsync(postId)).ReturnsAsync((Post?)null);
 
             // Act
             var result = await _controller.GetPostAsync(postId);
@@ -62,7 +57,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var posts = _fixture.CreateMany<Post>(); 
-            _postServiceMock.Setup(service => service.GetPostsAsync()).ReturnsAsync(posts.ToList());
+            _mockPostService.Setup(service => service.GetPostsAsync()).ReturnsAsync(posts.ToList());
 
             // Act
             var result = await _controller.GetPostsAsync();
@@ -104,7 +99,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
                     .Create();
 
 
-            _postServiceMock.Setup(service => service.CreatePostAsync(It.Is<Post>(_=>_.Title == request.Title && _.Content == request.Content)))
+            _mockPostService.Setup(service => service.CreatePostAsync(It.Is<Post>(_=>_.Title == request.Title && _.Content == request.Content)))
                            .ReturnsAsync(post);
 
             // Act
@@ -123,7 +118,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var postId = 1;
-            _postServiceMock.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(true);
+            _mockPostService.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(true);
 
             // Act
             var result = await _controller.DeletePostAsync(postId);
@@ -137,13 +132,84 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var postId = 1;
-            _postServiceMock.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(false);
+            _mockPostService.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(false);
 
             // Act
             var result = await _controller.DeletePostAsync(postId);
 
             // Assert
             result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task UpdatePostAsync_ReturnsBadRequest_WhenIdMismatch()
+        {
+            // Arrange
+            var request = _fixture.Build<UpdatePostRequest>()
+                                  .With(x => x.Id, 2)
+                                  .Create();
+
+            // Act
+            var result = await _controller.UpdatePostAsync(1, request);
+
+            // Assert
+            result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Fact]
+        public async Task UpdatePostAsync_ReturnsNotFound_WhenPostDoesNotExist()
+        {
+            // Arrange
+            _mockPostService.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
+                            .ReturnsAsync((Post?)null);
+
+            var request = _fixture.Create<UpdatePostRequest>();
+
+            // Act
+            var result = await _controller.UpdatePostAsync(request.Id, request);
+
+            // Assert
+            result.Should().BeOfType<NotFoundObjectResult>();
+        }
+
+        [Fact]
+        public async Task UpdatePostAsync_ReturnsOk_WhenUpdateIsSuccessful()
+        {
+            // Arrange
+            var post = _fixture.Create<Post>();
+            _mockPostService.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
+                            .ReturnsAsync(post);
+
+            var request = _fixture.Build<UpdatePostRequest>()
+                                  .With(x => x.Id, post.Id)
+                                  .With(x => x.Title, post.Title)
+                                  .With(x => x.Content, post.Content)
+                                  .Create();
+
+            // Act
+            var result = await _controller.UpdatePostAsync(post.Id, request);
+
+            // Assert
+            result.Should().BeOfType<OkObjectResult>();
+            var okResult = result as OkObjectResult;
+            okResult?.Value.Should().BeEquivalentTo(post, options => options.ComparingByMembers<Post>());
+        }
+
+        [Fact]
+        public async Task UpdatePostAsync_ReturnsStatusCode500_WhenExceptionOccurs()
+        {
+            // Arrange
+            _mockPostService.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
+                            .ThrowsAsync(new Exception("Test exception"));
+
+            var request = _fixture.Create<UpdatePostRequest>();
+
+            // Act
+            var result = await _controller.UpdatePostAsync(request.Id, request);
+
+            // Assert
+            var statusCodeResult = result as ObjectResult;
+            statusCodeResult?.StatusCode.Should().Be(500);
         }
     }
 }

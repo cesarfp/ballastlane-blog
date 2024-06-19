@@ -118,5 +118,32 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             }
         }
 
+        public async Task<bool> UpdatePostAsync(Post post)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                var query = new StringBuilder("UPDATE Post SET ");
+                query.Append("Title = @Title, ");
+                query.Append("Content = @Content, ");
+                query.Append("UpdatedAt = @UpdatedAt ");
+                query.Append("WHERE Id = @Id");
+
+                using (var command = new SqlCommand(query.ToString(), connection))
+                {
+                    command.Parameters.AddWithValue("@Title", post.Title);
+                    command.Parameters.AddWithValue("@Content", post.Content);
+                    command.Parameters.AddWithValue("@UpdatedAt", DateTime.UtcNow);
+                    command.Parameters.AddWithValue("@Id", post.Id);
+
+                    var result = await command.ExecuteNonQueryAsync();
+                    return result > 0;
+                }
+            }
+        }
+
+
+
     }
 }

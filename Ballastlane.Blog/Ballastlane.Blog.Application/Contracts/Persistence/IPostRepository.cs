@@ -13,5 +13,7 @@ namespace Ballastlane.Blog.Application.Contracts.Persistence
         Task<IList<Post>> GetPostsAsync();
         Task<Post> CreatePostAsync(Post post);
         Task<bool> DeletePostAsync(int id);
+        Task<bool> UpdatePostAsync(Post post);
+
     }
 }

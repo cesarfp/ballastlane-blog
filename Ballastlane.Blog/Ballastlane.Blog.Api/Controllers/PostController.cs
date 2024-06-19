@@ -90,6 +90,37 @@ namespace Ballastlane.Blog.Api.Controllers
             return NoContent();
         }
 
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePostAsync(int id, [FromBody] UpdatePostRequest request)
+        {
+            if (request == null || id != request.Id)
+            {
+                return BadRequest("Post ID does not match the request path ID.");
+            }
+
+            try
+            {
+                var updatedPost = await _postService.UpdatePostAsync( new Post
+                {
+                    Id = request.Id,
+                    Title = request.Title,
+                    Content = request.Content
+                });
+
+                if (updatedPost == null)
+                {
+                    return NotFound($"Post with ID {id} not found.");
+                }
+
+                return Ok(updatedPost);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while updating the post. Please try again later.");
+            }
+        }
+
 
     }
 }

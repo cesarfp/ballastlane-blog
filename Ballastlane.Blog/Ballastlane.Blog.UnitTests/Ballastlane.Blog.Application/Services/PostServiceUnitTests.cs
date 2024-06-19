@@ -124,5 +124,48 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             // Assert
             result.Should().BeFalse();
         }
+
+        [Fact]
+        public async Task UpdatePostAsync_ThrowsArgumentNullException_WhenPostIsNull()
+        {
+            // Arrange
+            Func<Task> act = async () => await _postService.UpdatePostAsync(null);
+
+            // Act & Assert
+            await act.Should().ThrowAsync<ArgumentNullException>();
+        }
+
+        [Fact]
+        public async Task UpdatePostAsync_ReturnsNull_WhenPostDoesNotExist()
+        {
+            // Arrange
+            var post = _fixture.Create<Post>();
+            _postRepositoryMock.Setup(repo => repo.GetPostAsync(It.IsAny<int>())).ReturnsAsync((Post?)null);
+
+            // Act
+            var result = await _postService.UpdatePostAsync(post);
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task UpdatePostAsync_ReturnsUpdatedPost_WhenUpdateIsSuccessful()
+        {
+            // Arrange
+            var post = _fixture.Create<Post>();
+            _postRepositoryMock.Setup(repo => repo.GetPostAsync(It.IsAny<int>())).ReturnsAsync(post);
+            _postRepositoryMock.Setup(repo => repo.UpdatePostAsync(It.IsAny<Post>())).Returns(Task.FromResult(true));
+
+            // Act
+            var result = await _postService.UpdatePostAsync(post);
+
+            // Assert
+            _postRepositoryMock.Verify(repo => repo.UpdatePostAsync(It.Is<Post>(p => p.Id == post.Id && p.Title == post.Title && p.Content == post.Content)), Times.Once);
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(post, options => options.ComparingByMembers<Post>());
+        }
     }
+
+
 }

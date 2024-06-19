@@ -50,6 +50,22 @@ namespace Ballastlane.Blog.Application.Services
             return await _postRepository.DeletePostAsync(id);
         }
 
+        public async Task<Post?> UpdatePostAsync(Post post)
+        {
+            ArgumentNullException.ThrowIfNull(post, nameof(post));
+            
+            var existingPost = await _postRepository.GetPostAsync(post.Id);
+            if (existingPost == null)
+            {
+                return null;
+            }
 
+            existingPost.Title = post.Title;
+            existingPost.Content = post.Content;
+           
+            await _postRepository.UpdatePostAsync(existingPost);
+
+            return existingPost;
+        }
     }
 }
