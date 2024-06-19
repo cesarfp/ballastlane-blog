@@ -18,6 +18,39 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             _connectionString = connectionString;
         }
 
+        public async Task<Post?> GetPostAsync(int id)
+        {
+            Post? post = null;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new SqlCommand("SELECT Id, Title, Content, CreatedAt, UpdatedAt FROM Post WHERE Id = @Id", connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            post = new Post
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Title = reader.GetString(reader.GetOrdinal("Title")),
+                                Content = reader.GetString(reader.GetOrdinal("Content")),
+                                CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt")),
+                                UpdatedAt = reader.IsDBNull(reader.GetOrdinal("UpdatedAt")) ? null : reader.GetDateTime(reader.GetOrdinal("UpdatedAt"))
+                            };
+                        }
+                    }
+                }
+            }
+
+            return post;
+        }
+
+
         public async Task<IList<Post>> GetPostsAsync()
         {
             var posts = new List<Post>();
@@ -26,7 +59,7 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             {
                 await connection.OpenAsync();
 
-                using (var command = new SqlCommand("SELECT Id, Title, Content FROM Post", connection))
+                using (var command = new SqlCommand("SELECT Id, Title, Content, CreatedAt, UpdatedAt FROM Post", connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
                     {
@@ -36,7 +69,9 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                 Title = reader.GetString(reader.GetOrdinal("Title")),
-                                Content = reader.GetString(reader.GetOrdinal("Content"))
+                                Content = reader.GetString(reader.GetOrdinal("Content")),
+                                CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt")),
+                                UpdatedAt = reader.IsDBNull(reader.GetOrdinal("UpdatedAt")) ? null : reader.GetDateTime(reader.GetOrdinal("UpdatedAt"))
                             };
 
                             posts.Add(post);

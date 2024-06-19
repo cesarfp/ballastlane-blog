@@ -1,6 +1,6 @@
 ﻿namespace Ballastlane.Blog.Api.Dtos
 {
-    public class CreatePostResponse
+    public class GetPostsResponse
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;

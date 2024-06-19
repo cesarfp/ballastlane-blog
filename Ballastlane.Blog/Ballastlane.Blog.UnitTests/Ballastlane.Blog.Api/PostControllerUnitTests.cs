@@ -26,6 +26,38 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         }
 
         [Fact]
+        public async Task GetPostAsync_PostExists_ReturnsOkObjectResultWithPost()
+        {
+            // Arrange
+            var expectedPost = _fixture.Create<Post>();
+
+            _postServiceMock.Setup(service => service.GetPostAsync(expectedPost.Id)).ReturnsAsync(expectedPost);
+
+            // Act
+            var result = await _controller.GetPostAsync(expectedPost.Id);
+
+            // Assert
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var postResponse = okResult.Value.Should().BeAssignableTo<GetPostResponse>().Subject;
+            
+            postResponse.Should().BeEquivalentTo(expectedPost, options => options.ExcludingMissingMembers()); 
+        }
+
+        [Fact]
+        public async Task GetPostAsync_PostDoesNotExist_ReturnsNotFoundResult()
+        {
+            // Arrange
+            var postId = _fixture.Create<int>();
+            _postServiceMock.Setup(service => service.GetPostAsync(postId)).ReturnsAsync((Post?)null);
+
+            // Act
+            var result = await _controller.GetPostAsync(postId);
+
+            // Assert
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
         public async Task GetPostsAsync_ReturnsOkWithPosts()
         {
             // Arrange
@@ -37,9 +69,9 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            okResult.Value.Should().BeAssignableTo<IList<Post>>();
+            okResult.Value.Should().BeAssignableTo<IEnumerable<GetPostsResponse>>();
             
-            var returnedPosts = okResult.Value as IEnumerable<Post>;
+            var returnedPosts = okResult.Value as IEnumerable<GetPostsResponse>;
             returnedPosts.Should().HaveCount(3);
             returnedPosts.Should().BeEquivalentTo(posts, options => options.ComparingByMembers<Post>());
         }

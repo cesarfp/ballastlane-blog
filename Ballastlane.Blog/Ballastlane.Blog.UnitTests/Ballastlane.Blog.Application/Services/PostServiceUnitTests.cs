@@ -24,6 +24,35 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
         }
 
         [Fact]
+        public async Task GetPostAsync_WhenPostExists_ReturnsPost()
+        {
+            // Arrange
+            var expectedPost = _fixture.Create<Post>();
+            _postRepositoryMock.Setup(repo => repo.GetPostAsync(expectedPost.Id)).ReturnsAsync(expectedPost);
+
+            // Act
+            var result = await _postService.GetPostAsync(expectedPost.Id);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(expectedPost, options => options.ExcludingMissingMembers());
+        }
+
+        [Fact]
+        public async Task GetPostAsync_WhenPostDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            var postId = _fixture.Create<int>();
+            _postRepositoryMock.Setup(repo => repo.GetPostAsync(postId)).ReturnsAsync((Post?)null);
+
+            // Act
+            var result = await _postService.GetPostAsync(postId);
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
         public async Task GetPostsAsync_ReturnsAllPosts()
         {
             // Arrange

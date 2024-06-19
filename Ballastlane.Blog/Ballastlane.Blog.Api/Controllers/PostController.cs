@@ -17,6 +17,27 @@ namespace Ballastlane.Blog.Api.Controllers
             _postService = postService;
         }
 
+        
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPostAsync(int id)
+        {
+            var foundPost = await _postService.GetPostAsync(id);
+
+            if (foundPost == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new GetPostResponse
+            {
+                Id = foundPost.Id,
+                Title = foundPost.Title,
+                Content = foundPost.Content,
+                CreatedAt = foundPost.CreatedAt,
+                UpdatedAt = foundPost.UpdatedAt
+            });
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreatePostAsync([FromBody] CreatePostRequest request)
         {
@@ -33,6 +54,7 @@ namespace Ballastlane.Blog.Api.Controllers
 
             return Ok(new CreatePostResponse
             {
+                Id = createdPost.Id,
                 Title = createdPost.Title,
                 Content = createdPost.Content,
                 CreatedAt = createdPost.CreatedAt,
@@ -43,9 +65,18 @@ namespace Ballastlane.Blog.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPostsAsync()
         {
-            
-            var posts = await _postService.GetPostsAsync();
-            return Ok(posts);
+            var foundPosts = await _postService.GetPostsAsync();
+
+            return Ok(foundPosts.Select( _=> new GetPostsResponse
+            {
+                Id = _.Id,
+                Title = _.Title,
+                Content = _.Content,
+                CreatedAt = _.CreatedAt,
+                UpdatedAt = _.UpdatedAt
+            }));
         }
+
+
     }
 }

@@ -18,9 +18,9 @@ namespace Ballastlane.Blog.Application.Services
             _postRepository = postRepository;
         }
 
-        public void GetPost()
+        public async Task<Post?> GetPostAsync(int Id)
         {
-            throw new NotImplementedException();
+            return await _postRepository.GetPostAsync(Id);
         }
 
         public async Task<IList<Post>> GetPostsAsync()
@@ -33,12 +33,12 @@ namespace Ballastlane.Blog.Application.Services
             return await _postRepository.CreatePostAsync(post);
         }
 
-        public void UpdatePost()
+        public void UpdatePostAsync()
         {
             throw new NotImplementedException();
         }
 
-        public void DeletePost()
+        public void DeletePostAsync()
         {
             throw new NotImplementedException();
         }
