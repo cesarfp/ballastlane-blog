@@ -24,10 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Ballastlane.Blog.Api\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\Ballastlane.Blog.Api\Ballastlane.Blog.Api.csproj" />
     <ProjectReference Include="..\Ballastlane.Blog.Application\Ballastlane.Blog.Application.csproj" />
   </ItemGroup>
 

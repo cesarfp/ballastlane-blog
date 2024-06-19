@@ -1,5 +1,6 @@
 ﻿using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Contracts.Services;
+using Ballastlane.Blog.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,20 +17,33 @@ namespace Ballastlane.Blog.Api.Controllers
             _postService = postService;
         }
 
-        //endpoint to create a new post
         [HttpPost]
-        public IActionResult CreatePost([FromBody] CreatePostRequest post)
+        public async Task<IActionResult> CreatePostAsync([FromBody] CreatePostRequest request)
         {
-            //create post
-            //return Ok();
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var createdPost = await _postService.CreatePostAsync(new Post
+            {
+                Title = request.Title,
+                Content = request.Content
+            });
+
+            return Ok(new CreatePostResponse
+            {
+                Title = createdPost.Title,
+                Content = createdPost.Content,
+                CreatedAt = createdPost.CreatedAt,
+                UpdatedAt = createdPost.UpdatedAt
+            });
         }
 
-        //Get a all posts
         [HttpGet]
         public async Task<IActionResult> GetPostsAsync()
         {
-            //get all posts
+            
             var posts = await _postService.GetPostsAsync();
             return Ok(posts);
         }

@@ -10,5 +10,6 @@ namespace Ballastlane.Blog.Application.Contracts.Persistence
     public interface IPostRepository
     {
         public Task<IList<Post>> GetPostsAsync();
+        public Task<Post> CreatePostAsync(Post post);
     }
 }

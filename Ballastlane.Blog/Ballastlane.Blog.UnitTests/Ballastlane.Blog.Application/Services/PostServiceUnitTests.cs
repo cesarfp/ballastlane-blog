@@ -24,6 +24,21 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
         }
 
         [Fact]
+        public async Task GetPostsAsync_ReturnsAllPosts()
+        {
+            // Arrange
+            var expectedPosts = _fixture.CreateMany<Post>().ToList(); 
+            _postRepositoryMock.Setup(repo => repo.GetPostsAsync()).ReturnsAsync(expectedPosts);
+
+            // Act
+            var posts = await _postService.GetPostsAsync();
+
+            // Assert
+            posts.Should().BeEquivalentTo(expectedPosts);
+        }
+
+
+        [Fact]
         public async Task GetPostsAsync_ShouldBeEmpty_WhenThereAreAnyPostCreated()
         {
             // Arrange 

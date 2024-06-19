@@ -8,8 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//builder.Services.AddScoped<IPostService, PostService>()
-//            .AddScoped<IPostRepository, PostRepository>()
 
 
 
@@ -18,11 +16,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddApplicationServices();
 
 // Configure DI container
+builder.Services.AddApplicationServices();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddInfrastructureServices(connectionString);
+builder.Services.AddInfrastructureServices(connectionString!);
 
 var app = builder.Build();
 

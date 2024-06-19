@@ -28,9 +28,9 @@ namespace Ballastlane.Blog.Application.Services
             return await _postRepository.GetPostsAsync();
         }
 
-        public void CreatePost()
+        public async Task<Post> CreatePostAsync(Post post)
         {
-            throw new NotImplementedException();
+            return await _postRepository.CreatePostAsync(post);
         }
 
         public void UpdatePost()

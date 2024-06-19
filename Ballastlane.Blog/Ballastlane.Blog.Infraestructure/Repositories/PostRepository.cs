@@ -18,7 +18,6 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             _connectionString = connectionString;
         }
 
-
         public async Task<IList<Post>> GetPostsAsync()
         {
             var posts = new List<Post>();
@@ -48,5 +47,25 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
 
             return posts;
         }
+
+        
+        public async Task<Post> CreatePostAsync(Post post)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new SqlCommand("INSERT INTO Post (Title, Content) VALUES (@Title, @Content); SELECT SCOPE_IDENTITY();", connection))
+                {
+                    command.Parameters.AddWithValue("@Title", post.Title);
+                    command.Parameters.AddWithValue("@Content", post.Content);
+
+                    post.Id = Convert.ToInt32(await command.ExecuteScalarAsync());
+                }
+            }
+
+            return post;
+        }
+
     }
 }
