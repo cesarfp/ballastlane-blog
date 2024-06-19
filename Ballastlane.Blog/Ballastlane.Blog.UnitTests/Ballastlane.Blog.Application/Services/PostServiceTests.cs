@@ -13,12 +13,12 @@ using AutoFixture;
 
 namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
 {
-    public class PostServiceUnitTests
+    public class PostServiceTests
     {
         public readonly IPostService _postService;
         public readonly Mock<IPostRepository> _postRepositoryMock = new Mock<IPostRepository>();
         public readonly Fixture _fixture = new Fixture();
-        public PostServiceUnitTests()
+        public PostServiceTests()
         {
             _postService = new PostService(_postRepositoryMock.Object);
         }

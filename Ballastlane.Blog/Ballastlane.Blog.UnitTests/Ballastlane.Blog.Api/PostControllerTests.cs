@@ -9,13 +9,13 @@ using Moq;
 
 namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
 {
-    public class PostControllerUnitTests
+    public class PostControllerTests
     {
         private readonly Mock<IPostService> _mockPostService = new Mock<IPostService>();
         private readonly PostController _controller;
         private readonly Fixture _fixture = new Fixture();
 
-        public PostControllerUnitTests()
+        public PostControllerTests()
         {
             _controller = new PostController(_mockPostService.Object);
         }
