@@ -9,7 +9,11 @@ namespace Ballastlane.Blog.Infrastructure.Extensions
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { 
+                    Title = "Ballast Lane Blog API", 
+                    Version = "v1",
+                    Description = "Ballast Lane technical excercise that simulates a blog posting system."
+                });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {

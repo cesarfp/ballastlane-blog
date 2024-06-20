@@ -14,5 +14,5 @@
     <ProjectReference Include="..\Ballastlane.Blog.Application\Ballastlane.Blog.Application.csproj" />
     <ProjectReference Include="..\Ballastlane.Blog.Infrastructure\Ballastlane.Blog.Infrastructure.csproj" />
   </ItemGroup>
-
+	
 </Project>

@@ -28,8 +28,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        c.RoutePrefix = string.Empty; // To serve the Swagger UI at the app's root
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ballast Lane Blog API v1");
+        c.RoutePrefix = "swagger";
     });
 }
 
