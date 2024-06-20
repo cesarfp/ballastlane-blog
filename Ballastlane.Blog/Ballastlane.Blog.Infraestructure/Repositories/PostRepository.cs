@@ -1,11 +1,7 @@
 ﻿using Ballastlane.Blog.Application.Contracts.Persistence;
 using Ballastlane.Blog.Domain.Entities;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Ballastlane.Blog.Infraestructure.Repositories
 {
@@ -18,7 +14,7 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             _connectionString = connectionString;
         }
 
-        public async Task<Post?> GetPostAsync(int id)
+        public async Task<Post?> GetPostAsync(int id, int userId)
         {
             Post? post = null;
 
@@ -26,9 +22,10 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             {
                 await connection.OpenAsync();
 
-                using (var command = new SqlCommand("SELECT Id, Title, Content, CreatedAt, UpdatedAt FROM Post WHERE Id = @Id", connection))
+                using (var command = new SqlCommand("SELECT Id, Title, Content, CreatedAt, UpdatedAt FROM Post WHERE Id = @Id AND UserId = @UserId", connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@UserId", userId);
 
                     using (var reader = await command.ExecuteReaderAsync())
                     {
@@ -50,8 +47,7 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             return post;
         }
 
-
-        public async Task<IList<Post>> GetPostsAsync()
+        public async Task<IList<Post>> GetPostsAsync(int? userId = null)
         {
             var posts = new List<Post>();
 
@@ -59,8 +55,19 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             {
                 await connection.OpenAsync();
 
-                using (var command = new SqlCommand("SELECT Id, Title, Content, CreatedAt, UpdatedAt FROM Post", connection))
+                var sqlQuery = new StringBuilder("SELECT Id, Title, Content, CreatedAt, UpdatedAt FROM Post");
+                if (userId.HasValue)
                 {
+                    sqlQuery.Append(" WHERE UserId = @UserId");
+                }
+
+                using (var command = new SqlCommand(sqlQuery.ToString(), connection))
+                {
+                    if (userId.HasValue)
+                    {
+                        command.Parameters.AddWithValue("@UserId", userId.Value);
+                    }
+
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -83,17 +90,18 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             return posts;
         }
 
-        
-        public async Task<Post> CreatePostAsync(Post post)
+
+        public async Task<Post> CreatePostAsync(Post post, int userId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                using (var command = new SqlCommand("INSERT INTO Post (Title, Content) VALUES (@Title, @Content); SELECT SCOPE_IDENTITY();", connection))
+                using (var command = new SqlCommand("INSERT INTO Post (Title, Content, UserId) VALUES (@Title, @Content, @UserId); SELECT SCOPE_IDENTITY();", connection))
                 {
                     command.Parameters.AddWithValue("@Title", post.Title);
                     command.Parameters.AddWithValue("@Content", post.Content);
+                    command.Parameters.AddWithValue("@UserId", userId);
 
                     post.Id = Convert.ToInt32(await command.ExecuteScalarAsync());
                 }
@@ -102,15 +110,16 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             return post;
         }
 
-        public async Task<bool> DeletePostAsync(int id)
+        public async Task<bool> DeletePostAsync(int id, int userId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                using (var command = new SqlCommand("DELETE FROM Post WHERE Id = @Id", connection))
+                using (var command = new SqlCommand("DELETE FROM Post WHERE Id = @Id AND UserId = @UserId", connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@UserId", userId);
 
                     var result = await command.ExecuteNonQueryAsync();
                     return result > 0;
@@ -118,7 +127,7 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
             }
         }
 
-        public async Task<bool> UpdatePostAsync(Post post)
+        public async Task<bool> UpdatePostAsync(Post post, int userId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -128,7 +137,7 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
                 query.Append("Title = @Title, ");
                 query.Append("Content = @Content, ");
                 query.Append("UpdatedAt = @UpdatedAt ");
-                query.Append("WHERE Id = @Id");
+                query.Append("WHERE Id = @Id AND UserId = @UserId");
 
                 using (var command = new SqlCommand(query.ToString(), connection))
                 {
@@ -136,6 +145,7 @@ namespace Ballastlane.Blog.Infraestructure.Repositories
                     command.Parameters.AddWithValue("@Content", post.Content);
                     command.Parameters.AddWithValue("@UpdatedAt", DateTime.UtcNow);
                     command.Parameters.AddWithValue("@Id", post.Id);
+                    command.Parameters.AddWithValue("@UserId", userId);
 
                     var result = await command.ExecuteNonQueryAsync();
                     return result > 0;

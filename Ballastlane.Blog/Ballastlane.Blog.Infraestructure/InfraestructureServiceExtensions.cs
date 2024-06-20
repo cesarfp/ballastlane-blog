@@ -12,6 +12,7 @@ namespace Ballastlane.Blog.Infraestructure
         {
             services.AddJwtAuthentication(configuration);
             services.AddSwaggerDocumentation();
+            services.AddUserContextService();
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 

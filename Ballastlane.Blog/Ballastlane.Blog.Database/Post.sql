@@ -1,7 +1,8 @@
 ﻿CREATE TABLE [dbo].[Post]
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
-    [Title] NVARCHAR(50) NOT NULL, 
+    [Title] NVARCHAR(50) NOT NULL,
+    [UserId] INT NOT NULL FOREIGN KEY REFERENCES [dbo].[User]([Id]),
     [Content] NVARCHAR(50) NOT NULL, 
     [CreatedAt] DATETIME NOT NULL DEFAULT GETDATE(), 
     [UpdatedAt] DATETIME NULL
