@@ -3,8 +3,13 @@ using Microsoft.OpenApi.Models;
 
 namespace Ballastlane.Blog.Infrastructure.Extensions
 {
-    public static class SwaggerServiceExtensions
+    /// <summary>
+    /// This class is used to configure Swagger and invoked by the <see cref="InfrastructureConfigurationExtensions"/> class.
+    /// </summary>
+
+    internal static class SwaggerDocumentationExtensions
     {
+        
         public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>

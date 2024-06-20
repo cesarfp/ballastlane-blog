@@ -10,13 +10,16 @@ using System.Text;
 
 namespace Ballastlane.Blog.Infrastructure.Extensions
 {
-    public static class AuthenticationServiceExtensions
+    /// <summary>
+    /// This class is used to configure the JWT authentication to the application and invoked by the <see cref="InfrastructureConfigurationExtensions"/> class.
+    /// </summary>
+    internal static class JwtAuthenticationExtensions
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtConfig>(configuration.GetSection("JwtConfig"));
 
-            services.AddSingleton<ITokenService, TokenService>();
+            services.AddSingleton<IJwtGeneratorService, JwtGeneratorService>();
 
             services.AddAuthentication(options =>
             {

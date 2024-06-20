@@ -1,12 +1,14 @@
 ﻿using Ballastlane.Blog.Application.Contracts.Persistence;
-using Ballastlane.Blog.Infrastructure.Extensions;
 using Ballastlane.Blog.Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Ballastlane.Blog.Infrastructure
+namespace Ballastlane.Blog.Infrastructure.Extensions
 {
-    public static class InfrastructureServiceExtensions
+    /// <summary>
+    /// This main class used to configure the infrastructure services and invoked by <see cref="Program"/>.
+    /// </summary>
+    public static class InfrastructureConfigurationExtensions
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
@@ -16,10 +18,10 @@ namespace Ballastlane.Blog.Infrastructure
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            services.AddTransient<IPostRepository, PostRepository>(provider =>
+            services.AddScoped<IPostRepository, PostRepository>(provider =>
                 new PostRepository(connectionString!));
 
-            services.AddTransient<IUserRepository, UserRepository>(provider =>
+            services.AddScoped<IUserRepository, UserRepository>(provider =>
                 new UserRepository(connectionString!));
 
             return services;

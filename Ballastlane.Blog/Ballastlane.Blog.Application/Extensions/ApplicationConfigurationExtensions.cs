@@ -2,15 +2,13 @@
 using Ballastlane.Blog.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Ballastlane.Blog.Application
+namespace Ballastlane.Blog.Application.Extensions
 {
-    public static class ApplicationServiceRegistration
+    public static class ApplicationConfigurationExtensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddTransient<IPostService, PostService>();
-
-
+            services.AddScoped<IPostService, PostService>();
             services.AddScoped<IUserService, UserService>();
 
             return services;

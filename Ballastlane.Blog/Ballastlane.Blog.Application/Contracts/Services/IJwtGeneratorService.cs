@@ -2,7 +2,7 @@
 
 namespace Ballastlane.Blog.Application.Contracts.Services
 {
-    public interface ITokenService
+    public interface IJwtGeneratorService
     {
         string GenerateToken(User user);
     }

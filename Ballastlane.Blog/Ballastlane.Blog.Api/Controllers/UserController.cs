@@ -10,11 +10,11 @@ namespace Ballastlane.Blog.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ITokenService _tokenService;
+        private readonly IJwtGeneratorService _tokenService;
 
         public UserController(
             IUserService userService, 
-            ITokenService tokenService)
+            IJwtGeneratorService tokenService)
         {
             _userService = userService;
             _tokenService = tokenService;

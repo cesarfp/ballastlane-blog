@@ -9,11 +9,11 @@ using System.Text;
 
 namespace Ballastlane.Blog.Infrastructure.Services
 {
-    public class TokenService : ITokenService
+    public class JwtGeneratorService : IJwtGeneratorService
     {
         private readonly JwtConfig _jwtConfig;
 
-        public TokenService(IOptions<JwtConfig> jwtConfig)
+        public JwtGeneratorService(IOptions<JwtConfig> jwtConfig)
         {
             _jwtConfig = jwtConfig.Value;
         }

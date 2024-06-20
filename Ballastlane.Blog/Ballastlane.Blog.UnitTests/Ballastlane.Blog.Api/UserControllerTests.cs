@@ -15,14 +15,14 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
     {
         private readonly IFixture _fixture;
         private readonly Mock<IUserService> _mockUserService;
-        private readonly Mock<ITokenService> _mockTokenService;
+        private readonly Mock<IJwtGeneratorService> _mockTokenService;
         private readonly UserController _controller;
 
         public UserControllerTests()
         {
             _fixture = new Fixture().Customize(new AutoMoqCustomization());
             _mockUserService = _fixture.Freeze<Mock<IUserService>>();
-            _mockTokenService = _fixture.Freeze<Mock<ITokenService>>();
+            _mockTokenService = _fixture.Freeze<Mock<IJwtGeneratorService>>();
             _controller = new UserController(_mockUserService.Object, _mockTokenService.Object);
         }
 
