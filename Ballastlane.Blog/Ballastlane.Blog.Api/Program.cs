@@ -1,7 +1,4 @@
 using Ballastlane.Blog.Application;
-using Ballastlane.Blog.Application.Contracts.Persistence;
-using Ballastlane.Blog.Application.Contracts.Services;
-using Ballastlane.Blog.Application.Services;
 using Ballastlane.Blog.Infraestructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,13 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 
 // Configure DI container
 builder.Services.AddApplicationServices();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddInfrastructureServices(connectionString!);
+
+
+builder.Services.AddInfrastructureServices(builder.Configuration);
+
 
 var app = builder.Build();
 
@@ -28,11 +26,16 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty; // To serve the Swagger UI at the app's root
+    });
 }
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -1,13 +1,15 @@
 ﻿using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Contracts.Services;
 using Ballastlane.Blog.Domain.Entities;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ballastlane.Blog.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+    [Authorize]
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;

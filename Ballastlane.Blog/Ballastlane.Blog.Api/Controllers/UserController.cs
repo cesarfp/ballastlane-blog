@@ -1,5 +1,6 @@
 ﻿using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Contracts.Services;
+using Ballastlane.Blog.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ballastlane.Blog.Api.Controllers
@@ -9,10 +10,14 @@ namespace Ballastlane.Blog.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ITokenService _tokenService;
 
-        public UserController(IUserService userService)
+        public UserController(
+            IUserService userService, 
+            ITokenService tokenService)
         {
             _userService = userService;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
@@ -40,6 +45,21 @@ namespace Ballastlane.Blog.Api.Controllers
             {
                 return StatusCode(500, "An error occurred while processing your request.");
             }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            var user = await _userService.ValidateUserCredentialsAsync(request.Email, request.Password);
+
+            if (user == null)
+            {
+                return Unauthorized("Invalid email or password.");
+            }
+
+            var token = _tokenService.GenerateToken(user);
+
+            return Ok(new { Token = token });
         }
     }
 }

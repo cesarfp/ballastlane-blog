@@ -11,13 +11,13 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
 {
     public class PostControllerTests
     {
-        private readonly Mock<IPostService> _mockPostService = new Mock<IPostService>();
+        private readonly Mock<IPostService> _postServiceMock = new Mock<IPostService>();
         private readonly PostController _controller;
         private readonly Fixture _fixture = new Fixture();
 
         public PostControllerTests()
         {
-            _controller = new PostController(_mockPostService.Object);
+            _controller = new PostController(_postServiceMock.Object);
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
             // Arrange
             var expectedPost = _fixture.Create<Post>();
 
-            _mockPostService.Setup(service => service.GetPostAsync(expectedPost.Id)).ReturnsAsync(expectedPost);
+            _postServiceMock.Setup(service => service.GetPostAsync(expectedPost.Id)).ReturnsAsync(expectedPost);
 
             // Act
             var result = await _controller.GetPostAsync(expectedPost.Id);
@@ -43,7 +43,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var postId = _fixture.Create<int>();
-            _mockPostService.Setup(service => service.GetPostAsync(postId)).ReturnsAsync((Post?)null);
+            _postServiceMock.Setup(service => service.GetPostAsync(postId)).ReturnsAsync((Post?)null);
 
             // Act
             var result = await _controller.GetPostAsync(postId);
@@ -56,8 +56,8 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         public async Task GetPostsAsync_ReturnsOkWithPosts()
         {
             // Arrange
-            var posts = _fixture.CreateMany<Post>(); 
-            _mockPostService.Setup(service => service.GetPostsAsync()).ReturnsAsync(posts.ToList());
+            var posts = _fixture.CreateMany<Post>();
+            _postServiceMock.Setup(service => service.GetPostsAsync()).ReturnsAsync(posts.ToList());
 
             // Act
             var result = await _controller.GetPostsAsync();
@@ -99,7 +99,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
                     .Create();
 
 
-            _mockPostService.Setup(service => service.CreatePostAsync(It.Is<Post>(_=>_.Title == request.Title && _.Content == request.Content)))
+            _postServiceMock.Setup(service => service.CreatePostAsync(It.Is<Post>(_=>_.Title == request.Title && _.Content == request.Content)))
                            .ReturnsAsync(post);
 
             // Act
@@ -118,7 +118,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var postId = 1;
-            _mockPostService.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(true);
+            _postServiceMock.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(true);
 
             // Act
             var result = await _controller.DeletePostAsync(postId);
@@ -132,7 +132,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var postId = 1;
-            _mockPostService.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(false);
+            _postServiceMock.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(false);
 
             // Act
             var result = await _controller.DeletePostAsync(postId);
@@ -160,7 +160,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         public async Task UpdatePostAsync_ReturnsNotFound_WhenPostDoesNotExist()
         {
             // Arrange
-            _mockPostService.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
+            _postServiceMock.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
                             .ReturnsAsync((Post?)null);
 
             var request = _fixture.Create<UpdatePostRequest>();
@@ -177,7 +177,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var post = _fixture.Create<Post>();
-            _mockPostService.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
+            _postServiceMock.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
                             .ReturnsAsync(post);
 
             var request = _fixture.Build<UpdatePostRequest>()
@@ -199,7 +199,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         public async Task UpdatePostAsync_ReturnsStatusCode500_WhenExceptionOccurs()
         {
             // Arrange
-            _mockPostService.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
+            _postServiceMock.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
                             .ThrowsAsync(new Exception("Test exception"));
 
             var request = _fixture.Create<UpdatePostRequest>();

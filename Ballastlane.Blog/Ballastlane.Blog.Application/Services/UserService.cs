@@ -8,14 +8,11 @@ namespace Ballastlane.Blog.Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IPasswordHasher _passwordHasher;
 
         public UserService(
-            IUserRepository userRepository,
-            IPasswordHasher passwordHasher)
+            IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
         }
 
         public async Task<RegistrationResult> RegisterUserAsync(RegisterUserRequest request)
@@ -27,17 +24,34 @@ namespace Ballastlane.Blog.Application.Services
                 return new RegistrationResult { IsSuccess = false, Message = "User already exists." };
             }
            
-            var hashedPassword = _passwordHasher.HashPassword(request.Password);
+            
 
             var newUser = new User
             {
                 Email = request.Email,
-                Password = hashedPassword
+                Password = request.Password
             };
 
             await _userRepository.AddAsync(newUser);
 
             return new RegistrationResult { IsSuccess = true, UserId = newUser.Id };
+        }
+
+        public async Task<User?> ValidateUserCredentialsAsync(string email, string password)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(email);
+
+            if (user != null)
+            {
+                var isValidPassword = user.Password == password;
+
+                if (isValidPassword)
+                {
+                    return user;
+                }
+            }
+
+            return null;
         }
     }
 }
