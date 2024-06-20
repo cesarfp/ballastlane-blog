@@ -1,6 +1,6 @@
 ﻿using Ballastlane.Blog.Application.Contracts.Services;
-using Ballastlane.Blog.Infraestructure.Options;
-using Ballastlane.Blog.Infraestructure.Services;
+using Ballastlane.Blog.Infrastructure.Options;
+using Ballastlane.Blog.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Ballastlane.Blog.Infraestructure.Extensions
+namespace Ballastlane.Blog.Infrastructure.Extensions
 {
     public static class AuthenticationServiceExtensions
     {

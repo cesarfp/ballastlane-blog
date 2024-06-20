@@ -1,5 +1,5 @@
 using Ballastlane.Blog.Application;
-using Ballastlane.Blog.Infraestructure;
+using Ballastlane.Blog.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

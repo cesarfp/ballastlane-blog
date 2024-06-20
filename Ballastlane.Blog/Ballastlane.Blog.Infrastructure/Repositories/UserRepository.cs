@@ -2,7 +2,7 @@
 using Ballastlane.Blog.Domain.Entities;
 using Microsoft.Data.SqlClient;
 
-namespace Ballastlane.Blog.Infraestructure.Repositories
+namespace Ballastlane.Blog.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {

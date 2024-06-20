@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ballastlane.Blog.Application\Ballastlane.Blog.Application.csproj" />
-    <ProjectReference Include="..\Ballastlane.Blog.Infraestructure\Ballastlane.Blog.Infraestructure.csproj" />
+    <ProjectReference Include="..\Ballastlane.Blog.Infrastructure\Ballastlane.Blog.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

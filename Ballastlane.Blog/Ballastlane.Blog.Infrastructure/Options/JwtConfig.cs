@@ -1,4 +1,4 @@
-﻿namespace Ballastlane.Blog.Infraestructure.Options
+﻿namespace Ballastlane.Blog.Infrastructure.Options
 {
     public class JwtConfig
     {

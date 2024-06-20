@@ -1,8 +1,8 @@
 ﻿using Ballastlane.Blog.Application.Contracts.Services;
-using Ballastlane.Blog.Infraestructure.Services;
+using Ballastlane.Blog.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Ballastlane.Blog.Infraestructure.Extensions
+namespace Ballastlane.Blog.Infrastructure.Extensions
 {
     public static class UserContextServiceExtensions
     {

@@ -137,7 +137,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
         public async Task UpdatePostAsync_ThrowsArgumentNullException_WhenPostIsNull()
         {
             // Arrange
-            Func<Task> act = async () => await _postService.UpdatePostAsync((Post?)null);
+            Func<Task> act = async () => await _postService.UpdatePostAsync(null!);
 
             // Act & Assert
             await act.Should().ThrowAsync<ArgumentNullException>();

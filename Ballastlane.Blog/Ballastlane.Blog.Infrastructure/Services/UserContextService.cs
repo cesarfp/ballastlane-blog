@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace Ballastlane.Blog.Infraestructure.Services
+namespace Ballastlane.Blog.Infrastructure.Services
 {
     public class UserContextService : IUserContextService
     {

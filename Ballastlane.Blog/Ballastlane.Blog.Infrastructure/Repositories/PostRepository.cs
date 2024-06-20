@@ -3,7 +3,7 @@ using Ballastlane.Blog.Domain.Entities;
 using Microsoft.Data.SqlClient;
 using System.Text;
 
-namespace Ballastlane.Blog.Infraestructure.Repositories
+namespace Ballastlane.Blog.Infrastructure.Repositories
 {
     public class PostRepository : IPostRepository
     {

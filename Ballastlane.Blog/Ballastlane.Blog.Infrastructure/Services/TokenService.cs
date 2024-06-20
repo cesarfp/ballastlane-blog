@@ -1,13 +1,13 @@
 ﻿using Ballastlane.Blog.Application.Contracts.Services;
 using Ballastlane.Blog.Domain.Entities;
-using Ballastlane.Blog.Infraestructure.Options;
+using Ballastlane.Blog.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Ballastlane.Blog.Infraestructure.Services
+namespace Ballastlane.Blog.Infrastructure.Services
 {
     public class TokenService : ITokenService
     {

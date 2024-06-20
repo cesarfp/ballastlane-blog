@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace Ballastlane.Blog.Infraestructure.Extensions
+namespace Ballastlane.Blog.Infrastructure.Extensions
 {
     public static class SwaggerServiceExtensions
     {
