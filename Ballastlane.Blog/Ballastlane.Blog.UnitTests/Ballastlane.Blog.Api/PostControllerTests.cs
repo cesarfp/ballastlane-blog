@@ -99,7 +99,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
                     .Create();
 
 
-            _postServiceMock.Setup(service => service.CreatePostAsync(It.Is<Post>(_=>_.Title == request.Title && _.Content == request.Content)))
+            _postServiceMock.Setup(service => service.CreatePostAsync(It.Is<CreatePostRequest>(_=>_.Title == request.Title && _.Content == request.Content)))
                            .ReturnsAsync(post);
 
             // Act
@@ -160,7 +160,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         public async Task UpdatePostAsync_ReturnsNotFound_WhenPostDoesNotExist()
         {
             // Arrange
-            _postServiceMock.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
+            _postServiceMock.Setup(service => service.UpdatePostAsync(It.IsAny<UpdatePostRequest>()))
                             .ReturnsAsync((Post?)null);
 
             var request = _fixture.Create<UpdatePostRequest>();
@@ -177,7 +177,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var post = _fixture.Create<Post>();
-            _postServiceMock.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
+            _postServiceMock.Setup(service => service.UpdatePostAsync(It.IsAny<UpdatePostRequest>()))
                             .ReturnsAsync(post);
 
             var request = _fixture.Build<UpdatePostRequest>()
@@ -199,7 +199,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         public async Task UpdatePostAsync_ReturnsStatusCode500_WhenExceptionOccurs()
         {
             // Arrange
-            _postServiceMock.Setup(service => service.UpdatePostAsync(It.IsAny<Post>()))
+            _postServiceMock.Setup(service => service.UpdatePostAsync(It.IsAny<UpdatePostRequest>()))
                             .ThrowsAsync(new Exception("Test exception"));
 
             var request = _fixture.Create<UpdatePostRequest>();

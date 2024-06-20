@@ -1,9 +1,5 @@
-﻿using Ballastlane.Blog.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ballastlane.Blog.Api.Dtos;
+using Ballastlane.Blog.Domain.Entities;
 
 namespace Ballastlane.Blog.Application.Contracts.Services
 {
@@ -11,8 +7,8 @@ namespace Ballastlane.Blog.Application.Contracts.Services
     {
         Task<Post?> GetPostAsync(int id);
         Task<IList<Post>> GetPostsAsync();
-        Task<Post> CreatePostAsync(Post post);
+        Task<Post> CreatePostAsync(CreatePostRequest post);
         Task<bool> DeletePostAsync(int id);
-        Task<Post?> UpdatePostAsync(Post post);
+        Task<Post?> UpdatePostAsync(UpdatePostRequest post);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Contracts.Services;
-using Ballastlane.Blog.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,11 +47,7 @@ namespace Ballastlane.Blog.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var createdPost = await _postService.CreatePostAsync(new Post
-            {
-                Title = request.Title,
-                Content = request.Content
-            });
+            var createdPost = await _postService.CreatePostAsync(request);
 
             return Ok(new CreatePostResponse
             {
@@ -103,12 +98,7 @@ namespace Ballastlane.Blog.Api.Controllers
 
             try
             {
-                var updatedPost = await _postService.UpdatePostAsync( new Post
-                {
-                    Id = request.Id,
-                    Title = request.Title,
-                    Content = request.Content
-                });
+                var updatedPost = await _postService.UpdatePostAsync(request);
 
                 if (updatedPost == null)
                 {

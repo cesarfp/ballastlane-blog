@@ -1,4 +1,5 @@
-﻿using Ballastlane.Blog.Application.Contracts.Persistence;
+﻿using Ballastlane.Blog.Api.Dtos;
+using Ballastlane.Blog.Application.Contracts.Persistence;
 using Ballastlane.Blog.Application.Contracts.Services;
 using Ballastlane.Blog.Domain.Entities;
 
@@ -31,9 +32,15 @@ namespace Ballastlane.Blog.Application.Services
             return await _postRepository.GetPostsAsync(userId);
         }
 
-        public async Task<Post> CreatePostAsync(Post post)
+        public async Task<Post> CreatePostAsync(CreatePostRequest request)
         {
             var userId = _userContextService.GetCurrentUserId();
+
+            var post = new Post
+            {
+                Title = request.Title,
+                Content = request.Content
+            };
 
             return await _postRepository.CreatePostAsync(post, userId);
         }
@@ -56,19 +63,19 @@ namespace Ballastlane.Blog.Application.Services
             return await _postRepository.DeletePostAsync(id, userId);
         }
 
-        public async Task<Post?> UpdatePostAsync(Post post)
+        public async Task<Post?> UpdatePostAsync(UpdatePostRequest request)
         {
-            ArgumentNullException.ThrowIfNull(post, nameof(post));
+            ArgumentNullException.ThrowIfNull(request, nameof(request));
 
             var userId = _userContextService.GetCurrentUserId();
-            var existingPost = await _postRepository.GetPostAsync(post.Id, userId);
+            var existingPost = await _postRepository.GetPostAsync(request.Id, userId);
             if (existingPost == null)
             {
                 return null;
             }
 
-            existingPost.Title = post.Title;
-            existingPost.Content = post.Content;
+            existingPost.Title = request.Title;
+            existingPost.Content = request.Content;
            
             await _postRepository.UpdatePostAsync(existingPost, userId);
 

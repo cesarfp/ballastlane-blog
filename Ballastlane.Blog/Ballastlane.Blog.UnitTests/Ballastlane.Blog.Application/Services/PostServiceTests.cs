@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Contracts.Persistence;
 using Ballastlane.Blog.Application.Contracts.Services;
 using Ballastlane.Blog.Application.Services;
@@ -147,12 +148,12 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
         public async Task UpdatePostAsync_ReturnsNull_WhenPostDoesNotExist()
         {
             // Arrange
-            var post = _fixture.Create<Post>();
+            var request = _fixture.Create<UpdatePostRequest>();
             var userId = _fixture.Create<int>();
             _postRepositoryMock.Setup(repo => repo.GetPostAsync(It.IsAny<int>(), userId)).ReturnsAsync((Post?)null);
 
             // Act
-            var result = await _postService.UpdatePostAsync(post);
+            var result = await _postService.UpdatePostAsync(request);
 
             // Assert
             result.Should().BeNull();
@@ -162,19 +163,27 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
         public async Task UpdatePostAsync_ReturnsUpdatedPost_WhenUpdateIsSuccessful()
         {
             // Arrange
-            var post = _fixture.Create<Post>();
+            var request = _fixture.Create<UpdatePostRequest>();
+            var post = _fixture.Build<Post>()
+                              .With(p => p.Id, request.Id)
+                              .With(p => p.Title, request.Title)
+                              .With(p => p.Content, request.Content)
+                              .With(p => p.CreatedAt, _fixture.Create<DateTime>())
+                              .With(p => p.UpdatedAt, _fixture.Create<DateTime>())
+                              .Create();
+
             var userId = _fixture.Create<int>();
             _userContextServiceMock.Setup(service => service.GetCurrentUserId()).Returns(userId); // Mock the user context service to return the expected userId
-            _postRepositoryMock.Setup(repo => repo.GetPostAsync(post.Id, userId)).ReturnsAsync(post);
+            _postRepositoryMock.Setup(repo => repo.GetPostAsync(request.Id, userId)).ReturnsAsync(post);
             _postRepositoryMock.Setup(repo => repo.UpdatePostAsync(It.IsAny<Post>(), userId)).ReturnsAsync(true);
 
             // Act
-            var result = await _postService.UpdatePostAsync(post);
+            var result = await _postService.UpdatePostAsync(request);
 
             // Assert
-            _postRepositoryMock.Verify(repo => repo.UpdatePostAsync(It.Is<Post>(p => p.Id == post.Id && p.Title == post.Title && p.Content == post.Content), userId), Times.Once);
+            _postRepositoryMock.Verify(repo => repo.UpdatePostAsync(It.Is<Post>(p => p.Id == request.Id && p.Title == request.Title && p.Content == request.Content), userId), Times.Once);
             result.Should().NotBeNull();
-            result.Should().BeEquivalentTo(post, options => options.ComparingByMembers<Post>());
+            result.Should().BeEquivalentTo(request, options => options.ComparingByMembers<Post>());
         }
     }
 
