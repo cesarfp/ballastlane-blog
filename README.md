@@ -1,2 +1,2 @@
 # ballastlane-blog
-Technical exercise for Ballastlane that simulates a blog posting web application
+Ballastlane technical exercise that simulates a blog posting web application
