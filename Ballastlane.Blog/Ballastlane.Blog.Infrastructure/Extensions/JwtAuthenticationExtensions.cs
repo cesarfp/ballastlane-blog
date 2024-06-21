@@ -1,6 +1,5 @@
 ﻿using Ballastlane.Blog.Application.Contracts.Infraestructure;
-using Ballastlane.Blog.Infrastructure.Options;
-using Ballastlane.Blog.Infrastructure.Services;
+using Ballastlane.Blog.Infrastructure.JwtGenerator;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +16,7 @@ namespace Ballastlane.Blog.Infrastructure.Extensions
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<JwtConfig>(configuration.GetSection("JwtConfig"));
+            services.Configure<JwtSettings>(configuration.GetSection("JwtConfig"));
 
             services.AddSingleton<IJwtGeneratorService, JwtGeneratorService>();
 
@@ -29,7 +28,7 @@ namespace Ballastlane.Blog.Infrastructure.Extensions
             .AddJwtBearer(options =>
             {
                 var serviceProvider = services.BuildServiceProvider();
-                var jwtConfig = serviceProvider.GetRequiredService<IOptionsSnapshot<JwtConfig>>().Value;
+                var jwtConfig = serviceProvider.GetRequiredService<IOptionsSnapshot<JwtSettings>>().Value;
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {

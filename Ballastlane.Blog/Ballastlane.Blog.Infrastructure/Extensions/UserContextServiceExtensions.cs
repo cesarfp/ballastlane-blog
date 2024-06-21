@@ -1,5 +1,5 @@
 ﻿using Ballastlane.Blog.Application.Contracts.Infraestructure;
-using Ballastlane.Blog.Infrastructure.Services;
+using Ballastlane.Blog.Infrastructure.UserContext;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Ballastlane.Blog.Infrastructure.Extensions

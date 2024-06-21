@@ -1,19 +1,18 @@
 ﻿using Ballastlane.Blog.Application.Contracts.Infraestructure;
 using Ballastlane.Blog.Domain.Entities;
-using Ballastlane.Blog.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Ballastlane.Blog.Infrastructure.Services
+namespace Ballastlane.Blog.Infrastructure.JwtGenerator
 {
     public class JwtGeneratorService : IJwtGeneratorService
     {
-        private readonly JwtConfig _jwtConfig;
+        private readonly JwtSettings _jwtConfig;
 
-        public JwtGeneratorService(IOptions<JwtConfig> jwtConfig)
+        public JwtGeneratorService(IOptions<JwtSettings> jwtConfig)
         {
             _jwtConfig = jwtConfig.Value;
         }
