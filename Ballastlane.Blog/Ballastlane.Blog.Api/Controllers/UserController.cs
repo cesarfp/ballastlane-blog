@@ -11,14 +11,12 @@ namespace Ballastlane.Blog.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IJwtGeneratorService _tokenService;
 
         public UserController(
             IUserService userService, 
             IJwtGeneratorService tokenService)
         {
             _userService = userService;
-            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
@@ -51,16 +49,14 @@ namespace Ballastlane.Blog.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var user = await _userService.ValidateUserCredentialsAsync(request.Email, request.Password);
+            var result = await _userService.ValidateUserCredentialsAsync(request.Email, request.Password);
 
-            if (user == null)
+            if (!result.IsSuccess)
             {
-                return Unauthorized("Invalid email or password.");
+                return Unauthorized(result.Error);
             }
 
-            var token = _tokenService.GenerateToken(user);
-
-            return Ok(new { Token = token });
+            return Ok(new { Token = result.Value });
         }
     }
 }

@@ -95,8 +95,9 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var loginRequest = _fixture.Create<LoginRequest>();
+            var operationResult = Result<string>.Failure("Invalid email or password");
             _mockUserService.Setup(s => s.ValidateUserCredentialsAsync(loginRequest.Email, loginRequest.Password))
-                            .ReturnsAsync((User?)null);
+                            .ReturnsAsync(operationResult);
 
             // Act
             var result = await _controller.Login(loginRequest);
@@ -114,9 +115,10 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
                                        .With(x => x.Email, user.Email) // Ensure the email matches the user's email
                                        .Create();
             var expectedToken = _fixture.Create<string>();
+            var operationResult = Result<string>.Success(expectedToken);
 
             _mockUserService.Setup(s => s.ValidateUserCredentialsAsync(loginRequest.Email, loginRequest.Password))
-                            .ReturnsAsync(user);
+                            .ReturnsAsync(operationResult);
             _mockTokenService.Setup(s => s.GenerateToken(user))
                             .Returns(expectedToken);
 

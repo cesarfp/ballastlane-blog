@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using Ballastlane.Blog.Api.Dtos;
+using Ballastlane.Blog.Application.Contracts.Infraestructure;
 using Ballastlane.Blog.Application.Contracts.Persistence;
 using Ballastlane.Blog.Application.Contracts.Services;
 using Ballastlane.Blog.Application.Services;
@@ -13,11 +14,14 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
     {
         private readonly Fixture _fixture = new Fixture();
         private readonly Mock<IUserRepository> _userRepositoryMock = new Mock<IUserRepository>();
+        private readonly Mock<IJwtGeneratorService> _jwtGeneratorService = new Mock<IJwtGeneratorService>();
         private readonly IUserService _userService;
 
         public UserServiceTests()
         {
-            _userService = new UserService(_userRepositoryMock.Object);
+            _userService = new UserService(
+                _userRepositoryMock.Object, 
+                _jwtGeneratorService.Object);
 
         }
 
@@ -70,7 +74,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeEquivalentTo(user);
+            result.IsSuccess.Should().BeTrue();
         }
 
         [Fact]
@@ -85,7 +89,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             var result = await _userService.ValidateUserCredentialsAsync(user.Email, "wrongpassword");
 
             // Assert
-            result.Should().BeNull();
+            result.IsSuccess.Should().BeFalse();
         }
     }
 }

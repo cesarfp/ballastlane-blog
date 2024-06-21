@@ -7,6 +7,6 @@ namespace Ballastlane.Blog.Application.Contracts.Services
     public  interface IUserService
     {
         public Task<Result> RegisterUserAsync(RegisterUserRequest request);
-        Task<User?> ValidateUserCredentialsAsync(string email, string password);
+        Task<Result<string>> ValidateUserCredentialsAsync(string email, string password);
     }
 }

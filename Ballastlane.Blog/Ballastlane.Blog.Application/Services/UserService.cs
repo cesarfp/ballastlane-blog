@@ -1,4 +1,5 @@
 ﻿using Ballastlane.Blog.Api.Dtos;
+using Ballastlane.Blog.Application.Contracts.Infraestructure;
 using Ballastlane.Blog.Application.Contracts.Persistence;
 using Ballastlane.Blog.Application.Contracts.Services;
 using Ballastlane.Blog.Application.Models;
@@ -9,11 +10,14 @@ namespace Ballastlane.Blog.Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IJwtGeneratorService _jwtGeneratorService;
 
         public UserService(
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IJwtGeneratorService jwtGeneratorService)
         {
             _userRepository = userRepository;
+            _jwtGeneratorService = jwtGeneratorService;
         }
 
         public async Task<Result> RegisterUserAsync(RegisterUserRequest request)
@@ -36,7 +40,7 @@ namespace Ballastlane.Blog.Application.Services
             return Result.Success("User registered successfully.");
         }
 
-        public async Task<User?> ValidateUserCredentialsAsync(string email, string password)
+        public async Task<Result<string>> ValidateUserCredentialsAsync(string email, string password)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
 
@@ -46,11 +50,13 @@ namespace Ballastlane.Blog.Application.Services
 
                 if (isValidPassword)
                 {
-                    return user;
+                    var token = _jwtGeneratorService.GenerateToken(user);
+                    
+                    return Result<string>.Success(token);
                 }
             }
 
-            return null;
+            return Result<string>.Failure("Invalid email or password.");
         }
     }
 }
