@@ -138,28 +138,19 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
         }
 
         [Fact]
-        public async Task UpdatePostAsync_ThrowsArgumentNullException_WhenPostIsNull()
-        {
-            // Arrange
-            Func<Task> act = async () => await _postService.UpdatePostAsync(null!);
-
-            // Act & Assert
-            await act.Should().ThrowAsync<ArgumentNullException>();
-        }
-
-        [Fact]
         public async Task UpdatePostAsync_ReturnsNull_WhenPostDoesNotExist()
         {
             // Arrange
             var request = _fixture.Create<UpdatePostRequest>();
             var userId = _fixture.Create<int>();
+
             _postRepositoryMock.Setup(repo => repo.GetPostAsync(It.IsAny<int>(), userId)).ReturnsAsync((Post?)null);
 
             // Act
             var result = await _postService.UpdatePostAsync(request);
 
             // Assert
-            result.Should().BeNull();
+            result.Value.Should().BeNull();
         }
 
         [Fact]
@@ -178,15 +169,15 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             var userId = _fixture.Create<int>();
             _userContextServiceMock.Setup(service => service.GetCurrentUserId()).Returns(userId); // Mock the user context service to return the expected userId
             _postRepositoryMock.Setup(repo => repo.GetPostAsync(request.Id, userId)).ReturnsAsync(post);
-            _postRepositoryMock.Setup(repo => repo.UpdatePostAsync(It.IsAny<Post>(), userId)).ReturnsAsync(true);
+            _postRepositoryMock.Setup(repo => repo.UpdatePostAsync(It.IsAny<Post>(), userId)).ReturnsAsync(post);
 
             // Act
             var result = await _postService.UpdatePostAsync(request);
 
             // Assert
             _postRepositoryMock.Verify(repo => repo.UpdatePostAsync(It.Is<Post>(p => p.Id == request.Id && p.Title == request.Title && p.Content == request.Content), userId), Times.Once);
-            result.Should().NotBeNull();
-            result.Should().BeEquivalentTo(request, options => options.ComparingByMembers<Post>());
+            result.Value.Should().NotBeNull();
+            result.Value.Should().BeEquivalentTo(request, options => options.ComparingByMembers<Post>());
         }
     }
 

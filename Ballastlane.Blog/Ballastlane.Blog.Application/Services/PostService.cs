@@ -107,23 +107,29 @@ namespace Ballastlane.Blog.Application.Services
             return Result<bool>.Success(await _postRepository.DeletePostAsync(id, userId));
         }
 
-        public async Task<Post?> UpdatePostAsync(UpdatePostRequest request)
+        public async Task<Result<Post?>> UpdatePostAsync(UpdatePostRequest request)
         {
-            ArgumentNullException.ThrowIfNull(request, nameof(request));
-
             var userId = _userContextService.GetCurrentUserId();
+
+            if (userId == default)
+            {
+                return Result<Post?>.Failure("User not found.");
+            }
+
             var existingPost = await _postRepository.GetPostAsync(request.Id, userId);
             if (existingPost == null)
             {
-                return null;
+                return Result<Post?>.Failure("Post not found.");
             }
 
-            existingPost.Title = request.Title;
-            existingPost.Content = request.Content;
-           
-            await _postRepository.UpdatePostAsync(existingPost, userId);
+            existingPost = await _postRepository.UpdatePostAsync(existingPost, userId);
 
-            return existingPost;
+            if (existingPost == null)
+            {
+                return Result<Post?>.Failure("An error occurred while updating the post.");
+            }
+
+            return Result<Post?>.Success(existingPost);
         }
     }
 }

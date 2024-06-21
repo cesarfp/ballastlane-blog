@@ -10,6 +10,6 @@ namespace Ballastlane.Blog.Application.Contracts.Services
         Task<Result<IList<Post>>> GetPostsAsync();
         Task<Result<Post>> CreatePostAsync(CreatePostRequest post);
         Task<Result<bool>> DeletePostAsync(int id);
-        Task<Post?> UpdatePostAsync(UpdatePostRequest post);
+        Task<Result<Post?>> UpdatePostAsync(UpdatePostRequest post);
     }
 }

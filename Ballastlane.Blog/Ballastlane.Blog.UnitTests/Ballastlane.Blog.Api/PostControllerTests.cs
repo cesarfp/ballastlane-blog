@@ -166,8 +166,9 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         public async Task UpdatePostAsync_ReturnsNotFound_WhenPostDoesNotExist()
         {
             // Arrange
+            var resultObject = Result<Post?>.Failure("Post not found.");
             _postServiceMock.Setup(service => service.UpdatePostAsync(It.IsAny<UpdatePostRequest>()))
-                            .ReturnsAsync((Post?)null);
+                            .ReturnsAsync(resultObject);
 
             var request = _fixture.Create<UpdatePostRequest>();
 
@@ -175,7 +176,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
             var result = await _controller.UpdatePostAsync(request.Id, request);
 
             // Assert
-            result.Should().BeOfType<NotFoundObjectResult>();
+            result.Should().BeOfType<UnprocessableEntityObjectResult>();
         }
 
         [Fact]
@@ -183,8 +184,9 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var post = _fixture.Create<Post>();
+            var resultObject = Result<Post?>.Success(post);
             _postServiceMock.Setup(service => service.UpdatePostAsync(It.IsAny<UpdatePostRequest>()))
-                            .ReturnsAsync(post);
+                            .ReturnsAsync(resultObject);
 
             var request = _fixture.Build<UpdatePostRequest>()
                                   .With(x => x.Id, post.Id)

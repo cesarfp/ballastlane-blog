@@ -148,12 +148,13 @@ namespace Ballastlane.Blog.Infrastructure.Repositories
             }
         }
 
-        public async Task<bool> UpdatePostAsync(Post post, int userId)
+        public async Task<Post?> UpdatePostAsync(Post post, int userId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
+                var updateAt = DateTime.UtcNow;
                 var query = new StringBuilder("UPDATE Post SET ");
                 query.Append("Title = @Title, ");
                 query.Append("Content = @Content, ");
@@ -164,17 +165,20 @@ namespace Ballastlane.Blog.Infrastructure.Repositories
                 {
                     command.Parameters.AddWithValue("@Title", post.Title);
                     command.Parameters.AddWithValue("@Content", post.Content);
-                    command.Parameters.AddWithValue("@UpdatedAt", DateTime.UtcNow);
+                    command.Parameters.AddWithValue("@UpdatedAt", updateAt);
                     command.Parameters.AddWithValue("@Id", post.Id);
                     command.Parameters.AddWithValue("@UserId", userId);
 
                     var result = await command.ExecuteNonQueryAsync();
-                    return result > 0;
+                    if (result > 0)
+                    {
+                        post.UpdatedAt = updateAt;
+                        return post;
+                    }
                 }
             }
+
+            return null;
         }
-
-
-
     }
 }

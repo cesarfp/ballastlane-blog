@@ -153,14 +153,14 @@ namespace Ballastlane.Blog.Api.Controllers
 
             try
             {
-                var updatedPost = await _postService.UpdatePostAsync(request);
+                var result = await _postService.UpdatePostAsync(request);
 
-                if (updatedPost == null)
+                if (!result.IsSuccess)
                 {
-                    return NotFound($"Post with ID {id} not found.");
+                    return UnprocessableEntity(result.Message);
                 }
 
-                return Ok(updatedPost);
+                return Ok(result.Value);
             }
             catch (Exception)
             {
