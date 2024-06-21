@@ -2,9 +2,9 @@
 using Ballastlane.Blog.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Ballastlane.Blog.Application.Extensions
+namespace Ballastlane.Blog.Application
 {
-    public static class ApplicationConfigurationExtensions
+    public static class ApplicationServiceRegistration
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {

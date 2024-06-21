@@ -11,7 +11,7 @@ using System.Text;
 namespace Ballastlane.Blog.Infrastructure.Extensions
 {
     /// <summary>
-    /// This class is used to configure the JWT authentication to the application and invoked by the <see cref="InfrastructureConfigurationExtensions"/> class.
+    /// This class is used to configure the JWT authentication to the application and invoked by the <see cref="InfrastructureServiceRegistration"/> class.
     /// </summary>
     internal static class JwtAuthenticationExtensions
     {

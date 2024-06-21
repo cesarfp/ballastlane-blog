@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Ballastlane.Blog.Infrastructure.Extensions
 {
     /// <summary>
-    /// This class is used to configure the UserContextService and invoked by <see cref="InfrastructureConfigurationExtensions"/> class.
+    /// This class is used to configure the UserContextService and invoked by <see cref="InfrastructureServiceRegistration"/> class.
     /// </summary>
     internal static class UserContextServiceExtensions
     {

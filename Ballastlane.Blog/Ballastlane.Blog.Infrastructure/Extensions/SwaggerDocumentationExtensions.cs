@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Models;
 namespace Ballastlane.Blog.Infrastructure.Extensions
 {
     /// <summary>
-    /// This class is used to configure Swagger and invoked by the <see cref="InfrastructureConfigurationExtensions"/> class.
+    /// This class is used to configure Swagger and invoked by the <see cref="InfrastructureServiceRegistration"/> class.
     /// </summary>
 
     internal static class SwaggerDocumentationExtensions

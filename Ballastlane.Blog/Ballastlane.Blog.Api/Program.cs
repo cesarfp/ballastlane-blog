@@ -1,5 +1,6 @@
-using Ballastlane.Blog.Application.Extensions;
-using Ballastlane.Blog.Infrastructure.Extensions;
+using Ballastlane.Blog.Application;
+using Ballastlane.Blog.Infrastructure;
+using Ballastlane.Blog.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,8 @@ builder.Services.AddEndpointsApiExplorer();
 
 // Configure DI container
 builder.Services.AddApplicationServices();
+builder.Services.AddPersistenceServices(builder.Configuration);
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 

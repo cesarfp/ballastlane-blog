@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ballastlane.Blog.Application\Ballastlane.Blog.Application.csproj" />
     <ProjectReference Include="..\Ballastlane.Blog.Infrastructure\Ballastlane.Blog.Infrastructure.csproj" />
+    <ProjectReference Include="..\Ballastlane.Blog.Persistence\Ballastlane.Blog.Persistence.csproj" />
   </ItemGroup>
 	
 </Project>
