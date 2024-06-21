@@ -3,6 +3,7 @@ using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Contracts.Infraestructure;
 using Ballastlane.Blog.Application.Contracts.Persistence;
 using Ballastlane.Blog.Application.Contracts.Services;
+using Ballastlane.Blog.Application.Models;
 using Ballastlane.Blog.Application.Services;
 using Ballastlane.Blog.Domain.Entities;
 using FluentAssertions;
@@ -46,13 +47,14 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             // Arrange
             var postId = _fixture.Create<int>();
             var userId = _fixture.Create<int>();
+            var resultObject = Result<Post>.Failure("Post not found.");
             _postRepositoryMock.Setup(repo => repo.GetPostAsync(postId, userId)).ReturnsAsync((Post?)null);
 
             // Act
             var result = await _postService.GetPostAsync(postId);
 
             // Assert
-            result.Should().BeNull();
+            result.IsSuccess.Should().BeFalse();
         }
 
         [Fact]

@@ -49,14 +49,29 @@ namespace Ballastlane.Blog.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var result = await _userService.ValidateUserCredentialsAsync(request.Email, request.Password);
-
-            if (!result.IsSuccess)
+            if (!ModelState.IsValid)
             {
-                return Unauthorized(result.Error);
+                return BadRequest(ModelState);
             }
 
-            return Ok(new { Token = result.Value });
+            try
+            {
+                var result = await _userService.ValidateUserCredentialsAsync(request.Email, request.Password);
+
+                if (!result.IsSuccess)
+                {
+                    return Unauthorized(result.Message);
+                }
+
+                return Ok(new { Token = result.Value });
+            }
+
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+
+            
         }
     }
 }

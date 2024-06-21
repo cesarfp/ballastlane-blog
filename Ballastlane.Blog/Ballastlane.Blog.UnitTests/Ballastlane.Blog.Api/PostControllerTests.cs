@@ -2,6 +2,7 @@
 using Ballastlane.Blog.Api.Controllers;
 using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Contracts.Services;
+using Ballastlane.Blog.Application.Models;
 using Ballastlane.Blog.Domain.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +26,9 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var expectedPost = _fixture.Create<Post>();
+            var resultObject = Result<Post>.Success(expectedPost);
 
-            _postServiceMock.Setup(service => service.GetPostAsync(expectedPost.Id)).ReturnsAsync(expectedPost);
+            _postServiceMock.Setup(service => service.GetPostAsync(expectedPost.Id)).ReturnsAsync(resultObject);
 
             // Act
             var result = await _controller.GetPostAsync(expectedPost.Id);
@@ -43,13 +45,14 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var postId = _fixture.Create<int>();
-            _postServiceMock.Setup(service => service.GetPostAsync(postId)).ReturnsAsync((Post?)null);
+            var resultObject = Result<Post>.Failure("Post not found.");
+            _postServiceMock.Setup(service => service.GetPostAsync(postId)).ReturnsAsync(resultObject);
 
             // Act
             var result = await _controller.GetPostAsync(postId);
 
             // Assert
-            result.Should().BeOfType<NotFoundResult>();
+            result.Should().BeOfType<NotFoundObjectResult>();
         }
 
         [Fact]

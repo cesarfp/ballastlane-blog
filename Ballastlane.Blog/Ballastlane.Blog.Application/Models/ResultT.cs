@@ -10,13 +10,13 @@ namespace Ballastlane.Blog.Application.Models
     {
         public bool IsSuccess { get; }
         public T Value { get; }
-        public string Error { get; }
+        public string Message { get; }
 
-        protected Result(T value, bool isSuccess, string error)
+        protected Result(T value, bool isSuccess, string message)
         {
             Value = value;
             IsSuccess = isSuccess;
-            Error = error;
+            Message = message;
         }
 
         public static Result<T> Success(T value) => new Result<T>(value, true, string.Empty);

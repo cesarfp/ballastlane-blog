@@ -2,6 +2,7 @@
 using Ballastlane.Blog.Application.Contracts.Infraestructure;
 using Ballastlane.Blog.Application.Contracts.Persistence;
 using Ballastlane.Blog.Application.Contracts.Services;
+using Ballastlane.Blog.Application.Models;
 using Ballastlane.Blog.Domain.Entities;
 
 namespace Ballastlane.Blog.Application.Services
@@ -19,10 +20,23 @@ namespace Ballastlane.Blog.Application.Services
             _userContextService = userContextService;
         }
 
-        public async Task<Post?> GetPostAsync(int Id)
+        public async Task<Result<Post>> GetPostAsync(int Id)
         {
             var userId = _userContextService.GetCurrentUserId();
-            return await _postRepository.GetPostAsync(Id, userId);
+
+            if(userId == default)
+            {
+                return Result<Post>.Failure("User not found.");
+            }
+
+            var post = await _postRepository.GetPostAsync(Id, userId);
+
+            if(post == null)
+            {
+                return Result<Post>.Failure("Post not found.");
+            }
+
+            return Result<Post>.Success(post);
         }
 
         public async Task<IList<Post>> GetPostsAsync()

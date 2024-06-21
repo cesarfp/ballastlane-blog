@@ -1,5 +1,7 @@
-﻿using Ballastlane.Blog.Api.Dtos;
+﻿using Azure.Core;
+using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Contracts.Services;
+using Ballastlane.Blog.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,21 +24,33 @@ namespace Ballastlane.Blog.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPostAsync(int id)
         {
-            var foundPost = await _postService.GetPostAsync(id);
-
-            if (foundPost == null)
+            if(id == default)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            return Ok(new GetPostResponse
+            try
             {
-                Id = foundPost.Id,
-                Title = foundPost.Title,
-                Content = foundPost.Content,
-                CreatedAt = foundPost.CreatedAt,
-                UpdatedAt = foundPost.UpdatedAt
-            });
+                var result = await _postService.GetPostAsync(id);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result.Message);
+                }
+
+                return Ok(new GetPostResponse
+                {
+                    Id = result.Value.Id,
+                    Title = result.Value.Title,
+                    Content = result.Value.Content,
+                    CreatedAt = result.Value.CreatedAt,
+                    UpdatedAt = result.Value.UpdatedAt
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         [HttpPost]
@@ -47,50 +61,83 @@ namespace Ballastlane.Blog.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var createdPost = await _postService.CreatePostAsync(request);
-
-            return Ok(new CreatePostResponse
+            try
             {
-                Id = createdPost.Id,
-                Title = createdPost.Title,
-                Content = createdPost.Content,
-                CreatedAt = createdPost.CreatedAt,
-                UpdatedAt = createdPost.UpdatedAt
-            });
+                var createdPost = await _postService.CreatePostAsync(request);
+
+                return Ok(new CreatePostResponse
+                {
+                    Id = createdPost.Id,
+                    Title = createdPost.Title,
+                    Content = createdPost.Content,
+                    CreatedAt = createdPost.CreatedAt,
+                    UpdatedAt = createdPost.UpdatedAt
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> GetPostsAsync()
         {
-            var foundPosts = await _postService.GetPostsAsync();
-
-            return Ok(foundPosts.Select( _=> new GetPostsResponse
+            try
             {
-                Id = _.Id,
-                Title = _.Title,
-                Content = _.Content,
-                CreatedAt = _.CreatedAt,
-                UpdatedAt = _.UpdatedAt
-            }));
+                var foundPosts = await _postService.GetPostsAsync();
+
+                return Ok(foundPosts.Select(_ => new GetPostsResponse
+                {
+                    Id = _.Id,
+                    Title = _.Title,
+                    Content = _.Content,
+                    CreatedAt = _.CreatedAt,
+                    UpdatedAt = _.UpdatedAt
+                }));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+
+            
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePostAsync(int id)
         {
-            var result = await _postService.DeletePostAsync(id);
-
-            if (!result)
+            if (id == default)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            return NoContent();
+            try
+            {
+                var result = await _postService.DeletePostAsync(id);
+
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePostAsync(int id, [FromBody] UpdatePostRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (request == null || id != request.Id)
             {
                 return BadRequest("Post ID does not match the request path ID.");
