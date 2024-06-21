@@ -97,13 +97,34 @@ namespace Ballastlane.Blog.Infrastructure.Repositories
             {
                 await connection.OpenAsync();
 
-                using (var command = new SqlCommand("INSERT INTO Post (Title, Content, UserId) VALUES (@Title, @Content, @UserId); SELECT SCOPE_IDENTITY();", connection))
+                string insertSql = @"
+                    INSERT INTO Post (Title, Content, UserId) 
+                    VALUES (@Title, @Content, @UserId); 
+                    SELECT SCOPE_IDENTITY();";
+
+                using (var command = new SqlCommand(insertSql, connection))
                 {
                     command.Parameters.AddWithValue("@Title", post.Title);
                     command.Parameters.AddWithValue("@Content", post.Content);
                     command.Parameters.AddWithValue("@UserId", userId);
 
                     post.Id = Convert.ToInt32(await command.ExecuteScalarAsync());
+                }
+
+                if (post.Id > 0)
+                {
+                    string selectSql = "SELECT CreatedAt FROM Post WHERE Id = @Id";
+
+                    using (var command = new SqlCommand(selectSql, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id", post.Id);
+
+                        var createdAtObj = await command.ExecuteScalarAsync();
+                        if (createdAtObj != null)
+                        {
+                            post.CreatedAt = Convert.ToDateTime(createdAtObj);
+                        }
+                    }
                 }
             }
 
