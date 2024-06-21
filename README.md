@@ -1,53 +1,60 @@
 # Project Title
 
-Ballast Lane technical excercise that simulates a blog posting system.
+Ballastlane Technical Exercise: Simulating a Blog Posting System
 
 ## Introduction
 
-The Ballastlane Blog API is a simple web application developed as part of a technical interview exercise. It showcases a .NET C# application using ASP.NET Web API, focusing on Clean Architecture principles and Test-Driven Development (TDD) methodologies. This application allows users to perform CRUD operations on blog records and manage user authentication without relying on Entity Framework, Dapper, or Mediator.
+The Ballastlane Blog API is a straightforward web application developed as part of a technical interview exercise. It demonstrates a .NET C# application using ASP.NET Web API, emphasizing Clean Architecture principles and Test-Driven Development (TDD) methodologies. Users can perform CRUD operations on blog records and manage user authentication without relying on Entity Framework, Dapper, or Mediator.
 
 
 ## Technical Architecture
 
 ### Components
 
-- **Ballastlane.Blog.Infraestructure**: Contains database and non-related bussines logic implementations. The database used for the application was SQL Server 2022.
-- **Ballastlane.Blog.Api**: Features ASP.NET Web API endpoints for CRUD operations and user management. For this exercise two controllers were created UserController and PostController.
-- **Ballastlane.Blog.Database**: Contains all the scripts needed to build the database schema.
-- **Ballastlane.Blog.Application**: Contains business rules and validation, independent of the data layer and API.
-- **Ballastlane.Blog.UnitTests**: Covers all components, ensuring adherence to TDD methodologies.
+- **Presentation layer**
+    - **Ballastlane.Blog.Api**: Features ASP.NET Web API endpoints for CRUD operations and user management.
+
+- **Infrastructure layer**
+    - **Ballastlane.Blog.Infraestructure**: Contains service implementations that are not part of the business logic but are needed for the application to function.
+
+    - **Ballastlane.Blog.Persistence**: Contains database repository implementations.
+
+    - **Ballastlane.Blog.Database**: Contains all the scripts needed to build the database schema.
+
+- **Core layer**
+    - **Ballastlane.Blog.Application**: Contains business rules and validation, independent of the infraestructure layer and API.
+
+    - **Ballaslane.Blog.Domain**: Contains entity definitions relevant to the application domain.
+
+- **Tests**
+    - **Ballastlane.Blog.UnitTests**: Covers all components, ensuring adherence to TDD methodologies.
 
 ### API Endpoints
-
 Below are the available endpoints for the Ballast Lane Blog API, detailing how to interact with the blog records and user management functionalities.
 
 #### User Controller
-
 This controller defines the register and login endpoints
-- Register endpoint: Implements the user registration. Currently, an email and a password are needed.
-- Login endpoint: Implements the user login. A user needs to be previously registered to be able to login. If the login is succesful the endpoint will generate a JWT token to be able to interact with the Post controller endpoints.
+- **Register endpoint**: Implements the user registration. Currently, an email and a password are needed.
+- **Login endpoint**: Implements user login. Users must be previously registered to log in. If the login is successful, the endpoint will generate a JWT token for interacting with the Post controller endpoints.
 
 #### Post Controller
-To interact with this controller a JWT token is required.
+To interact with this controller, a JWT token is required.
 
-- **Create post endpoint**: This endponts allows a user to create posts.
-- **Get post endpoint**: This endpoint get the post especified by the user.
-- **Get posts endpoint**: This endpoint get the list of posts created by the user.
-- **Delete post endpoint**: This endpoint remove the post especified by the user. 
-- **Update post endpoint**: This endpoint update the post especified by the user.
+- **Create post endpoint**: This endpoint allows a user to create posts.
+- **Get post endpoint**: This endpoint retrieves the post specified by the user.
+- **Get posts endpoint**: This endpoint retrieves the list of posts created by the user.
+- **Delete post endpoint**: This endpoint removes the post specified by the user.
+- **Update post endpoint**: This endpoint updates the post specified by the user.
 
 
 ### Development
-
 This application was developed following Clean Architecture principles, ensuring a separation of concerns and independence of components. The development process was driven by the user stories outlined above.
 
 ## Running the Application Locally
-
-This project is fully runnable locally, with Docker preferred for ease of setup and consistency across development environments. The application's architecture, design decisions, and functionality are detailed further in this document, providing a comprehensive overview for both users and contributors.
+This project is fully runnable locally, with Docker preferred for ease of setup and consistency across development environments. The application’s architecture, design decisions, and functionality are detailed further in this document, providing a comprehensive overview for both users and contributors.
 
 
 ### Prerequisites
-
 - Git
 - Docker
 - Visual Studio 2022
@@ -57,21 +64,23 @@ These instructions will get you a copy of the project up and running on your loc
 
 1. **Download and run SQL Server docker image**: `docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Strong#Password" -p 1433:1433 --name ballastlane-blog -d mcr.microsoft.com/mssql/server:2022-latest`
 
-    Note: To run the application, you can leave the default values but if you want to change:
+    Note: You can leave the default values, but if you want to make changes:
 
-    - The password, you can do it here: "MSSQL_SA_PASSWORD=Strong#Password". 
-    - The ports: -p 1433:1433
-    - The docker container name: --name ballastlane-blog
-
-
+    - To modify the password, adjust the value here: "MSSQL_SA_PASSWORD=Strong#Password". 
+    - To change the ports, modify the `-p 1433:1433` section.
+    - To set a different container name, adjust: `--name ballastlane-blog`
 
 2. **Clong the repostiory**: `git clone https://github.com/cesarfp/ballastlane-blog.git`
 
-3. **Publish the database**: Open the Visual Studio solution, go to the Ballastlane.Blog.Database project to create the database schema.
+3. **Publish the database**: 
+- Open the Visual Studio solution.
+- Go to the Ballastlane.Blog.Database and publish it. 
+- Select the database instance and use "BallastlaneBlog" as database name.
+    - Note: You can use a different database name however, considering update the connection string in the appsetting.json file in the web api project.
 
-    Note: Select the database instance and choose a database name.
-
-4. **Execute the application**: Once the Visual Studio solution is open, make make sure that the Ballastlane.Blog.Api project is selected as Startup project, and run the application.
+4. **Execute the application**: 
+- Ensure that the Ballastlane.Blog.Api project is selected as the startup project in Visual Studio.
+- Run the application.
 
 ## User Stories
 
