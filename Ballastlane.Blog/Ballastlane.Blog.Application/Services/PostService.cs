@@ -54,17 +54,33 @@ namespace Ballastlane.Blog.Application.Services
             return Result<IList<Post>>.Success(posts);
         }
 
-        public async Task<Post> CreatePostAsync(CreatePostRequest request)
+        public async Task<Result<Post>> CreatePostAsync(CreatePostRequest request)
         {
+            if (request == null)
+            {
+                return Result<Post>.Failure("Request cannot be null.");
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Title) || string.IsNullOrWhiteSpace(request.Content))
+            {
+                return Result<Post>.Failure("Title and content cannot be empty.");
+            }
+
             var userId = _userContextService.GetCurrentUserId();
 
-            var post = new Post
+            if (userId == default)
+            {
+                return Result<Post>.Failure("User not found.");
+            }
+
+
+            var post = await _postRepository.CreatePostAsync(new Post
             {
                 Title = request.Title,
                 Content = request.Content
-            };
+            }, userId);
 
-            return await _postRepository.CreatePostAsync(post, userId);
+            return Result<Post>.Success(post);
         }
 
         public async Task<bool> DeletePostAsync(int id)

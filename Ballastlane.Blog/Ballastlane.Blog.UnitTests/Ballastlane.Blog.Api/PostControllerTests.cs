@@ -102,9 +102,9 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
                     .With(p => p.Content, request.Content)
                     .Create();
 
-
+            var resultObject = Result<Post>.Success(post);
             _postServiceMock.Setup(service => service.CreatePostAsync(It.Is<CreatePostRequest>(_=>_.Title == request.Title && _.Content == request.Content)))
-                           .ReturnsAsync(post);
+                           .ReturnsAsync(resultObject);
 
             // Act
             var result = await _controller.CreatePostAsync(request);

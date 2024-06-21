@@ -24,7 +24,7 @@ namespace Ballastlane.Blog.Api.Controllers
         {
             if(id == default)
             {
-                return BadRequest();
+                return BadRequest("Invalid ID.");
             }
 
             try
@@ -61,15 +61,20 @@ namespace Ballastlane.Blog.Api.Controllers
 
             try
             {
-                var createdPost = await _postService.CreatePostAsync(request);
+                var result = await _postService.CreatePostAsync(request);
+
+                if (!result.IsSuccess)
+                {
+                    return UnprocessableEntity(new { Error = result.Message });
+                }
 
                 return Ok(new CreatePostResponse
                 {
-                    Id = createdPost.Id,
-                    Title = createdPost.Title,
-                    Content = createdPost.Content,
-                    CreatedAt = createdPost.CreatedAt,
-                    UpdatedAt = createdPost.UpdatedAt
+                    Id = result.Value.Id,
+                    Title = result.Value.Title,
+                    Content = result.Value.Content,
+                    CreatedAt = result.Value.CreatedAt,
+                    UpdatedAt = result.Value.UpdatedAt
                 });
             }
             catch (Exception)
@@ -87,7 +92,7 @@ namespace Ballastlane.Blog.Api.Controllers
 
                 if (!result.IsSuccess)
                 {
-                    return BadRequest(result.Message);
+                    return NotFound(result.Message);
                 }
 
                 return Ok(result.Value.Select(_ => new GetPostsResponse
