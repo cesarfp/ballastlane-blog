@@ -83,17 +83,28 @@ namespace Ballastlane.Blog.Application.Services
             return Result<Post>.Success(post);
         }
 
-        public async Task<bool> DeletePostAsync(int id)
+        public async Task<Result<bool>> DeletePostAsync(int id)
         {
+            if(id == default)
+            {
+                return Result<bool>.Failure("Invalid ID.");
+            }
+
             var userId = _userContextService.GetCurrentUserId();
+            
+            if (userId == default)
+            {
+                return Result<bool>.Failure("User not found.");
+            }
+
             var postToDelete = await _postRepository.GetPostAsync(id, userId);
 
             if (postToDelete == null)
             {
-                return false;
+                return Result<bool>.Failure("Post not found.");
             }
 
-            return await _postRepository.DeletePostAsync(id, userId);
+            return Result<bool>.Success(await _postRepository.DeletePostAsync(id, userId));
         }
 
         public async Task<Post?> UpdatePostAsync(UpdatePostRequest request)

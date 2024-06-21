@@ -117,16 +117,16 @@ namespace Ballastlane.Blog.Api.Controllers
         {
             if (id == default)
             {
-                return BadRequest();
+                return BadRequest("Invalid ID.");
             }
 
             try
             {
                 var result = await _postService.DeletePostAsync(id);
 
-                if (!result)
+                if (!result.IsSuccess)
                 {
-                    return NotFound();
+                    return UnprocessableEntity(result.Message);
                 }
 
                 return NoContent();

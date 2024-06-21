@@ -119,7 +119,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             var result = await _postService.DeletePostAsync(post.Id);
 
             // Assert
-            result.Should().BeTrue();
+            result.IsSuccess.Should().BeTrue();
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             var result = await _postService.DeletePostAsync(postId);
 
             // Assert
-            result.Should().BeFalse();
+            result.IsSuccess.Should().BeFalse();
         }
 
         [Fact]

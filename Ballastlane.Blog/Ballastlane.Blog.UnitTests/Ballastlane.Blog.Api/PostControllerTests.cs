@@ -122,7 +122,8 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var postId = 1;
-            _postServiceMock.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(true);
+            var resultObject = Result<bool>.Success(true);
+            _postServiceMock.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(resultObject);
 
             // Act
             var result = await _controller.DeletePostAsync(postId);
@@ -136,13 +137,14 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var postId = 1;
-            _postServiceMock.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(false);
+            var resultObject = Result<bool>.Failure("Post not found.");
+            _postServiceMock.Setup(service => service.DeletePostAsync(postId)).ReturnsAsync(resultObject);
 
             // Act
             var result = await _controller.DeletePostAsync(postId);
 
             // Assert
-            result.Should().BeOfType<NotFoundResult>();
+            result.Should().BeOfType<UnprocessableEntityObjectResult>();
         }
 
         [Fact]
