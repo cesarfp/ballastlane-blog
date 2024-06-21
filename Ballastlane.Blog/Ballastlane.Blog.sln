@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ballastlane.Blog.UnitTests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ballastlane.Blog.Infrastructure", "Ballastlane.Blog.Infrastructure\Ballastlane.Blog.Infrastructure.csproj", "{4519237F-7B17-46D8-B8A8-6B84622C38E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ballastlane.Blog.Persistence", "Ballastlane.Blog.Persistence\Ballastlane.Blog.Persistence.csproj", "{AEA864BB-1D62-43A8-8355-5E4E8304CD5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{4519237F-7B17-46D8-B8A8-6B84622C38E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4519237F-7B17-46D8-B8A8-6B84622C38E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4519237F-7B17-46D8-B8A8-6B84622C38E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEA864BB-1D62-43A8-8355-5E4E8304CD5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEA864BB-1D62-43A8-8355-5E4E8304CD5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEA864BB-1D62-43A8-8355-5E4E8304CD5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEA864BB-1D62-43A8-8355-5E4E8304CD5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +72,7 @@ Global
 		{C8EFF2A4-B9D1-4EB9-AA2A-2EE039B5CEF1} = {3724DF0A-7C74-4984-98FD-4B6EAC07F504}
 		{1F09A298-5BA9-4365-8FC6-715F612A89AA} = {91F36CCE-8E1C-41B4-97A0-FB15C18ACBDD}
 		{4519237F-7B17-46D8-B8A8-6B84622C38E1} = {3724DF0A-7C74-4984-98FD-4B6EAC07F504}
+		{AEA864BB-1D62-43A8-8355-5E4E8304CD5A} = {3724DF0A-7C74-4984-98FD-4B6EAC07F504}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {989D7037-29E7-4C9F-80C8-A82AD386F13C}

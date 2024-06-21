@@ -1,4 +1,4 @@
-﻿using Ballastlane.Blog.Application.Contracts.Services;
+﻿using Ballastlane.Blog.Application.Contracts.Infraestructure;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 

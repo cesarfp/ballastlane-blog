@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using Ballastlane.Blog.Api.Dtos;
+using Ballastlane.Blog.Application.Contracts.Infraestructure;
 using Ballastlane.Blog.Application.Contracts.Persistence;
 using Ballastlane.Blog.Application.Contracts.Services;
 using Ballastlane.Blog.Application.Services;

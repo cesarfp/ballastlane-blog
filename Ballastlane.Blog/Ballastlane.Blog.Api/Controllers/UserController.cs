@@ -1,4 +1,5 @@
 ﻿using Ballastlane.Blog.Api.Dtos;
+using Ballastlane.Blog.Application.Contracts.Infraestructure;
 using Ballastlane.Blog.Application.Contracts.Services;
 using Ballastlane.Blog.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;

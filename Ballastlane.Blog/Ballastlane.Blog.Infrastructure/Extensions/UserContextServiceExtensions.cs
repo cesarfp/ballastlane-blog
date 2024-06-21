@@ -1,4 +1,4 @@
-﻿using Ballastlane.Blog.Application.Contracts.Services;
+﻿using Ballastlane.Blog.Application.Contracts.Infraestructure;
 using Ballastlane.Blog.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 

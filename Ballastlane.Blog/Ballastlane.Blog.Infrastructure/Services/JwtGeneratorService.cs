@@ -1,4 +1,4 @@
-﻿using Ballastlane.Blog.Application.Contracts.Services;
+﻿using Ballastlane.Blog.Application.Contracts.Infraestructure;
 using Ballastlane.Blog.Domain.Entities;
 using Ballastlane.Blog.Infrastructure.Options;
 using Microsoft.Extensions.Options;

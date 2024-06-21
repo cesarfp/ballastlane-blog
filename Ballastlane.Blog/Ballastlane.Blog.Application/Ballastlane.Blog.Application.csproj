@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Ballastlane.Blog.Domain\Ballastlane.Blog.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

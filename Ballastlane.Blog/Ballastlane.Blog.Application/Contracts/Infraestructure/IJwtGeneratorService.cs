@@ -1,6 +1,6 @@
 ﻿using Ballastlane.Blog.Domain.Entities;
 
-namespace Ballastlane.Blog.Application.Contracts.Services
+namespace Ballastlane.Blog.Application.Contracts.Infraestructure
 {
     public interface IJwtGeneratorService
     {
