@@ -67,10 +67,10 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             _postRepositoryMock.Setup(repo => repo.GetPostsAsync(userId)).ReturnsAsync(expectedPosts);
 
             // Act
-            var posts = await _postService.GetPostsAsync();
+            var result = await _postService.GetPostsAsync();
 
             // Assert
-            posts.Should().BeEquivalentTo(expectedPosts);
+            result.Value.Should().BeEquivalentTo(expectedPosts);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             var result = await _postService.GetPostsAsync();
 
             // Assert
-            result.Should().BeEmpty();
+            result.Value.Should().BeEmpty();
             result.Should().NotBeNull();
         }
 
@@ -102,7 +102,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             var result = await _postService.GetPostsAsync();
 
             // Assert
-            result.Should().NotBeEmpty();
+            result.Value.Should().NotBeEmpty();
         }
 
         [Fact]

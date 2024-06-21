@@ -1,7 +1,5 @@
-﻿using Azure.Core;
-using Ballastlane.Blog.Api.Dtos;
+﻿using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Contracts.Services;
-using Ballastlane.Blog.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -85,9 +83,14 @@ namespace Ballastlane.Blog.Api.Controllers
         {
             try
             {
-                var foundPosts = await _postService.GetPostsAsync();
+                var result = await _postService.GetPostsAsync();
 
-                return Ok(foundPosts.Select(_ => new GetPostsResponse
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result.Message);
+                }
+
+                return Ok(result.Value.Select(_ => new GetPostsResponse
                 {
                     Id = _.Id,
                     Title = _.Title,

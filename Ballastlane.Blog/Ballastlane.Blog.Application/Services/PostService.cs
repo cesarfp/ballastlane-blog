@@ -39,12 +39,19 @@ namespace Ballastlane.Blog.Application.Services
             return Result<Post>.Success(post);
         }
 
-        public async Task<IList<Post>> GetPostsAsync()
+        public async Task<Result<IList<Post>>> GetPostsAsync()
         {
             var userId = _userContextService.GetCurrentUserId();
+            
+            if (userId == default)
+            {
+                return Result<IList<Post>>.Failure("User not found.");
+            }
+
+            var posts = await _postRepository.GetPostsAsync(userId);
 
 
-            return await _postRepository.GetPostsAsync(userId);
+            return Result<IList<Post>>.Success(posts);
         }
 
         public async Task<Post> CreatePostAsync(CreatePostRequest request)

@@ -60,7 +60,8 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var posts = _fixture.CreateMany<Post>();
-            _postServiceMock.Setup(service => service.GetPostsAsync()).ReturnsAsync(posts.ToList());
+            var resultObject = Result<IList<Post>>.Success(posts.ToList());
+            _postServiceMock.Setup(service => service.GetPostsAsync()).ReturnsAsync(resultObject);
 
             // Act
             var result = await _controller.GetPostsAsync();
