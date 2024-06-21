@@ -122,6 +122,9 @@ namespace Ballastlane.Blog.Application.Services
                 return Result<Post?>.Failure("Post not found.");
             }
 
+            existingPost.Title = request.Title;
+            existingPost.Content = request.Content;
+
             existingPost = await _postRepository.UpdatePostAsync(existingPost, userId);
 
             if (existingPost == null)
