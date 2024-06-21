@@ -30,7 +30,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             // Arrange
             var expectedPost = _fixture.Create<Post>();
             var userId = _fixture.Create<int>();
-            _userContextServiceMock.Setup(service => service.GetCurrentUserId()).Returns(userId); // Mock the user context service to return the expected userId
+            _userContextServiceMock.Setup(service => service.GetCurrentUserId()).Returns(userId);
             _postRepositoryMock.Setup(repo => repo.GetPostAsync(expectedPost.Id, userId)).ReturnsAsync(expectedPost);
 
             // Act
@@ -111,7 +111,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
             // Arrange
             var post = _fixture.Create<Post>();
             var userId = _fixture.Create<int>();
-            _userContextServiceMock.Setup(service => service.GetCurrentUserId()).Returns(userId); // Mock the user context service to return the expected userId
+            _userContextServiceMock.Setup(service => service.GetCurrentUserId()).Returns(userId);
             _postRepositoryMock.Setup(repo => repo.GetPostAsync(post.Id, userId)).ReturnsAsync(post);
             _postRepositoryMock.Setup(repo => repo.DeletePostAsync(post.Id, userId)).ReturnsAsync(true);
 
@@ -167,7 +167,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Application.Services
                               .Create();
 
             var userId = _fixture.Create<int>();
-            _userContextServiceMock.Setup(service => service.GetCurrentUserId()).Returns(userId); // Mock the user context service to return the expected userId
+            _userContextServiceMock.Setup(service => service.GetCurrentUserId()).Returns(userId);
             _postRepositoryMock.Setup(repo => repo.GetPostAsync(request.Id, userId)).ReturnsAsync(post);
             _postRepositoryMock.Setup(repo => repo.UpdatePostAsync(It.IsAny<Post>(), userId)).ReturnsAsync(post);
 

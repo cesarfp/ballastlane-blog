@@ -1,6 +1,5 @@
 ﻿using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Models;
-using Ballastlane.Blog.Domain.Entities;
 
 namespace Ballastlane.Blog.Application.Contracts.Services
 {
