@@ -35,7 +35,7 @@ namespace Ballastlane.Blog.Api.Controllers
 
                 if (result.IsSuccess)
                 {
-                    return Ok(result);
+                    return Ok();
                 }
                 else
                 {

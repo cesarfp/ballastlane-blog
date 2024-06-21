@@ -5,6 +5,7 @@ using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Contracts.Infraestructure;
 using Ballastlane.Blog.Application.Contracts.Services;
 using Ballastlane.Blog.Application.Dtos;
+using Ballastlane.Blog.Application.Models;
 using Ballastlane.Blog.Domain.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -32,14 +33,15 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
         {
             // Arrange
             var request = _fixture.Create<RegisterUserRequest>();
+            var userId = _fixture.Create<int>();
             _mockUserService.Setup(s => s.RegisterUserAsync(It.IsAny<RegisterUserRequest>()))
-                            .ReturnsAsync(new RegistrationResult { IsSuccess = true });
+                            .ReturnsAsync(Result.Success("User registered successfully."));
 
             // Act
             var result = await _controller.RegisterUser(request);
 
             // Assert
-            result.Should().BeOfType<OkObjectResult>();
+            result.Should().BeOfType<OkResult>();
         }
 
         [Fact]
@@ -48,7 +50,7 @@ namespace Ballastlane.Blog.UnitTests.Ballastlane.Blog.Api
             // Arrange
             var request = _fixture.Create<RegisterUserRequest>();
             _mockUserService.Setup(s => s.RegisterUserAsync(It.IsAny<RegisterUserRequest>()))
-                            .ReturnsAsync(new RegistrationResult { IsSuccess = false, Message = "User already exists." });
+                            .ReturnsAsync(Result.Failure("User already exists."));
 
             // Act
             var result = await _controller.RegisterUser(request);

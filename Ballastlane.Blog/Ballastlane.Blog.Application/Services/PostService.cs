@@ -46,11 +46,6 @@ namespace Ballastlane.Blog.Application.Services
             return await _postRepository.CreatePostAsync(post, userId);
         }
 
-        public void UpdatePostAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> DeletePostAsync(int id)
         {
             var userId = _userContextService.GetCurrentUserId();

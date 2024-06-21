@@ -1,6 +1,7 @@
 ﻿using Ballastlane.Blog.Api.Dtos;
 using Ballastlane.Blog.Application.Contracts.Persistence;
 using Ballastlane.Blog.Application.Contracts.Services;
+using Ballastlane.Blog.Application.Models;
 using Ballastlane.Blog.Domain.Entities;
 
 namespace Ballastlane.Blog.Application.Services
@@ -15,16 +16,14 @@ namespace Ballastlane.Blog.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<RegistrationResult> RegisterUserAsync(RegisterUserRequest request)
+        public async Task<Result> RegisterUserAsync(RegisterUserRequest request)
         {
             var existingUser = await _userRepository.GetUserByEmailAsync(request.Email);
             
             if (existingUser != null)
             {
-                return new RegistrationResult { IsSuccess = false, Message = "User already exists." };
+                return Result.Failure("User already exists.");
             }
-           
-            
 
             var newUser = new User
             {
@@ -34,7 +33,7 @@ namespace Ballastlane.Blog.Application.Services
 
             await _userRepository.AddAsync(newUser);
 
-            return new RegistrationResult { IsSuccess = true, UserId = newUser.Id };
+            return Result.Success("User registered successfully.");
         }
 
         public async Task<User?> ValidateUserCredentialsAsync(string email, string password)
